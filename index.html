@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>建站教练 · 互动实战课程</title>
+<meta name="description" content="从寻找新词到网站上线的全流程互动课程：工具一键直达、肌肉记忆训练、实战工作坊。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand" id="homeBtn" role="button" tabindex="0">
+      <div class="brand-mark">S</div>
+      <div class="brand-text">
+        <strong>建站教练</strong>
+        <span>Interactive Course · 2026</span>
+      </div>
+    </div>
+    <nav class="topnav" id="topnav">
+      <button class="nav-btn active" data-view="course">课程</button>
+      <button class="nav-btn" data-view="tools">工具库 <em id="toolCount"></em></button>
+      <button class="nav-btn" data-view="training">训练场</button>
+      <button class="nav-btn" data-view="map">作战地图</button>
+      <button class="nav-btn" data-view="workshop">实战工坊</button>
+    </nav>
+    <div class="top-actions">
+      <div class="progress-mini" title="课程完成度">
+        <span id="progressPct">0%</span>
+        <div class="progress-track"><div id="progressFill"></div></div>
+      </div>
+      <button class="icon-btn" id="themeBtn" title="切换明暗主题" aria-label="切换明暗主题">◐</button>
+    </div>
+  </header>
+
+  <main class="main" id="main">
+    <!-- COURSE VIEW -->
+    <section class="view active" id="view-course">
+      <aside class="sidebar">
+        <div class="side-head">
+          <h2>课程目录</h2>
+        </div>
+        <div class="module-list" id="moduleList"></div>
+        <div class="side-foot">
+          <div class="side-foot-icon">→</div>
+          <div><strong>肌肉记忆法则</strong><p>看完 ≠ 学会。每节结束后去「训练场」过一遍。</p></div>
+        </div>
+      </aside>
+      <article class="lesson" id="lesson"></article>
+      <aside class="rail" id="rail"></aside>
+    </section>
+
+    <!-- TOOLS VIEW -->
+    <section class="view" id="view-tools">
+      <div class="page-wrap">
+        <div class="page-hero">
+          <h1>工具库</h1>
+          <p>课程里提到的网站、平台、工具全部整理在这里。按阶段筛选，点击卡片直接跳转。</p>
+        </div>
+        <div class="tool-controls">
+          <div class="search-box"><span>⌕</span><input id="toolSearch" type="search" placeholder="搜索工具名 / 用途 / 关键词，例如 trends、收款、Reddit…"></div>
+          <div class="chip-row" id="toolCats"></div>
+        </div>
+        <div class="tool-grid" id="toolGrid"></div>
+        <div class="empty-state" id="toolEmpty" hidden>没有匹配的工具，换个词试试。</div>
+      </div>
+    </section>
+
+    <!-- TRAINING VIEW -->
+    <section class="view" id="view-training">
+      <div class="page-wrap">
+        <div class="page-hero">
+          <h1>训练场</h1>
+          <p>四种刻意练习：词根闪卡、情境判断、流程排序、15 分钟研判清单。数据自动保存在本机。</p>
+        </div>
+        <div class="tabbar" id="trainTabs">
+          <button class="tab active" data-train="flash">① 词根闪卡</button>
+          <button class="tab" data-train="quiz">② 情境判断</button>
+          <button class="tab" data-train="order">③ 流程排序</button>
+          <button class="tab" data-train="check">④ 15 分钟研判</button>
+        </div>
+        <div class="train-panel active" id="train-flash"></div>
+        <div class="train-panel" id="train-quiz"></div>
+        <div class="train-panel" id="train-order"></div>
+        <div class="train-panel" id="train-check"></div>
+      </div>
+    </section>
+
+    <!-- MAP VIEW -->
+    <section class="view" id="view-map">
+      <div class="page-wrap">
+        <div class="page-hero">
+          <h1>作战地图</h1>
+          <p>六个阶段、一条主线。点开每个阶段，按清单打勾，工具直接点开。这是你以后每次做站都要跑的标准流程。</p>
+        </div>
+        <div class="map-flow" id="mapFlow"></div>
+      </div>
+    </section>
+
+    <!-- WORKSHOP VIEW -->
+    <section class="view" id="view-workshop">
+      <div class="page-wrap">
+        <div class="page-hero">
+          <h1>实战工坊</h1>
+          <p>输入一个你正在考虑的方向，一键生成可直接复制的 AI 提示词与上线清单。别再只看不练。</p>
+        </div>
+        <div class="workshop-grid">
+          <div class="panel">
+            <div class="panel-title"><span class="dot cyan"></span>① 我的候选项目</div>
+            <label>目标领域 / 母词（英文更好）</label>
+            <input id="wsNiche" class="field" placeholder="例如：podcast / shopify / real estate / etsy" value="etsy">
+            <label>你发现的痛点或场景</label>
+            <textarea id="wsPain" class="field" rows="3" placeholder="例如：卖家每个季度都要手动算平台费、广告费和利润，Excel 表格乱成一团">卖家每个季度都要手动算平台费、广告费和利润，Excel 表格乱成一团</textarea>
+            <label>变现方式</label>
+            <select id="wsModel" class="field">
+              <option value="ads">免费工具 + AdSense 广告</option>
+              <option value="saas">小微收费工具（MoR 订阅 / 买断）</option>
+              <option value="affiliate">导航 / 评测站 + 联盟佣金</option>
+            </select>
+            <button class="btn primary wide" id="genBtn">生成作战方案 →</button>
+            <div class="hint">内容只在本机生成，不会上传。</div>
+          </div>
+          <div class="panel" id="wsOutput">
+            <div class="empty-art">✦</div>
+            <h3>等待你的第一个点子</h3>
+            <p>左边填完点生成，这里会出现：PRD 提示词、关键词组合清单、上线前保命指令、变现路径建议。</p>
+          </div>
+        </div>
+        <div class="panel note-panel">
+          <div class="panel-title"><span class="dot gold"></span>我的训练笔记 <span class="muted">自动保存到本机</span></div>
+          <textarea id="notes" class="field" rows="6" placeholder="随手记下今天挖到的新词、看到的抱怨、想到的组合…"></textarea>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
