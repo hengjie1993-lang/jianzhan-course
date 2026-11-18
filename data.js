@@ -1,6 +1,6 @@
 /* ============================================================
    建站教练互动课程 · 内容数据
-   内容来源：《阿无的建站教练课程》（桌面完整版，2026-11-18；含 9 节基础/专题课 + 6 堂深度进阶课）
+   内容来源：《阿无的建站教练课程》（桌面完整版，2026-11-18；含 9 节基础/专题课 + 6 堂深度进阶课 + 6 个实战补丁）
    ============================================================ */
 
 const TOOLS = [
@@ -101,7 +101,14 @@ const TOOLS = [
   {name:'Plausible',cat:'流量增长',url:'https://plausible.io/',desc:'隐私友好的轻量统计，看流量来源与关键事件漏斗。',note:'GA4 的轻量化替代'},
   {name:'Umami',cat:'流量增长',url:'https://umami.is/',desc:'开源可自托管的简洁统计，免费档够用。',note:'与 Plausible 二选一'},
   {name:'PostHog',cat:'流量增长',url:'https://posthog.com/',desc:'产品分析 + 漏斗 + 会话回放，免费档可用。',note:'埋好首页→工具→付费墙→支付四事件'},
-  {name:'Microsoft Clarity',cat:'流量增长',url:'https://clarity.microsoft.com/',desc:'免费录下真实欧美访客的鼠标轨迹、热力图与愤怒点击。',note:'看 15 分钟回放就能找到 UX 致命伤'}
+  {name:'Microsoft Clarity',cat:'流量增长',url:'https://clarity.microsoft.com/',desc:'免费录下真实欧美访客的鼠标轨迹、热力图与愤怒点击。',note:'看 15 分钟回放就能找到 UX 致命伤'},
+  {name:'USPTO 商标搜索',cat:'托管域名',url:'https://tmsearch.uspto.gov/',desc:'美国专利商标局官网，买域名前查核心词在 Class 9 / 42 是否已被巨头独占。',note:'避开 NotionHelper 这类商标自杀名'},
+  {name:'Wayback Machine',cat:'托管域名',url:'https://web.archive.org/',desc:'查二手/过期域名的历史快照，看过去 3–5 年有没有博彩/仿牌/灰产黑历史。',note:'买老域名前必做的案底体检'},
+  {name:'Cloudflare Email Routing',cat:'托管域名',url:'https://dash.cloudflare.com/?to=/:account/email/routing',desc:'免费把 hello@你的域名.com 转发到个人邮箱，零成本拥有品牌联系邮箱。',note:'配合 Gmail"以其他身份发送"可收发'},
+  {name:'Zoho Mail',cat:'托管域名',url:'https://www.zoho.com/mail/',desc:'低价企业邮箱，信誉高，适合做冷邮件和商务合作。',note:'Google Workspace 的平替'},
+  {name:'Google Workspace',cat:'托管域名',url:'https://workspace.google.com/',desc:'企业域名邮箱，信誉极高，审核人员更信任。',note:'月费低，适合正经商务'},
+  {name:'Resend',cat:'建站开发',url:'https://resend.com/',desc:'开发者事务邮件 API，免费额度够早期用，Next.js 集成极快。',note:'验证码 / 收据 / Magic Link 用它发'},
+  {name:'Postmark',cat:'建站开发',url:'https://postmarkapp.com/',desc:'事务邮件 API，送达率高，比自建 SMTP 可靠得多。',note:'Resend 的备选'}
 ];
 
 /* block helpers */
@@ -113,6 +120,7 @@ const GRID = (items) => ({t:'grid',items});
 const CALL = (kind,title,text) => ({t:'callout',kind,title,text});
 const FORM = (html) => ({t:'formula',html});
 const TERMS = (items) => ({t:'terms',items});
+const CODE = (text,label) => ({t:'code',text,label});
 
 const MODULES = [
   {
@@ -732,6 +740,220 @@ const MODULES = [
     ],
     tools:['Google Search Console','Google Analytics','Microsoft Clarity','Plausible','Bing Webmaster Tools','Reddit','Product Hunt'],
     takeaway:['前 3 名吃掉近 70% 点击，优先推第 4–20 名潜力词','每周 30 分钟 GSC 提权，28 天后看对比','每季度四象限体检：Keep / Refresh / Consolidate / Prune']
+  },
+  {
+    id:'m16',title:'补丁 0：域名排雷与黑历史体检',sub:'后缀选择 · 商标自杀排雷 · 二手域名案底',
+    kicker:'PATCH 00 · DOMAIN SAFETY',
+    lede:'很多开发者选品、建站全做对了，却因为域名踩了商标或黑历史雷区，导致域名被强制收回、收款账号被封，或者网页怎么写都不被 Google 信任。这一节放在最前面看。',
+    quote:'花 1 分钟查商标和案底，能省掉几个月的心血和一次封号。',
+    sections:[
+      {title:'域名后缀怎么选',blocks:[
+        TERMS([
+          {term:'首选 .com',text:'欧美用户心智里 .com = 正规商业实体。若品牌名 .com 被高价占注，宁可换更短易拼的词根加后缀（usexxx.com / tryxxx.com / getxxx.com / xxxapp.com），也别轻易买生僻廉价后缀。'},
+          {term:'次选 .io / .ai / .app',text:'适合明确面向开发者、AI 工具或移动应用受众的产品，欧美科技圈接受度高。'},
+          {term:'避坑后缀',text:'.xyz / .top / .site / .click 长期被垃圾群发和钓鱼站滥用，容易引起欧美用户警惕，在邮件送达和部分广告 / 联盟审核中也天然劣势。别用于面向主流商业用户的主站。'}
+        ])
+      ]},
+      {title:'商标自杀排雷（买前 1 分钟）',blocks:[
+        CALL('warn','千万别在域名里放大厂商标','NotionHelper.com、SpotifyDownloader.com、ChatGPTPrompts.com 这类名字：轻则收到律师函，被对方通过 UDRP（统一域名争议解决政策）无偿没收域名；重则触发 Stripe / MoR 支付平台和 Google AdSense 的"知识产权侵权"风控，账户冻结、资金无法提现。'),
+        P('自检动作：买域名前去 <span class="inline-code">tmsearch.uspto.gov</span> 搜你想用的核心词，避开在科技 / 软件分类（Class 9 / Class 42）下已被巨头注册的独占词。')
+      ]},
+      {title:'二手 / 过期域名的案底体检',blocks:[
+        P('别因为"带老年份"就直接买下释放出来的老域名 —— 很多是被 Google 永久降权后才被抛弃的。必查 3 步：'),
+        STEP([
+          {title:'查历史快照',text:'去 Wayback Machine（web.archive.org）输入域名，抽查过去 3–5 年截图，确认以前是正常英文站，没有中文博彩、医药垃圾或跳转页。'},
+          {title:'查外链锚文本',text:'用 Ahrefs 免费外链检查工具看一眼，若历史外链充斥不相关的俄语 / 日语垃圾词或灰产词，立刻放弃。'},
+          {title:'查 Google 残余收录',text:'在 Google 搜 <span class="inline-code">site:目标域名.com</span>，看是否还有遗留的违规标题。'}
+        ])
+      ]}
+    ],
+    tools:['USPTO 商标搜索','Wayback Machine','Ahrefs','Google 搜索','Porkbun','Cloudflare Registrar'],
+    takeaway:['.com 优先；生僻廉价后缀别做欧美主流商业主站','域名别含大厂商标：UDRP 没收 + 收款风控双重雷','老域名先查快照 / 外链 / 残余收录三件事']
+  },
+  {
+    id:'m17',title:'补丁 1：邮件送达率与域名邮箱',sub:'SPF · DKIM · DMARC · 零成本邮箱架构',
+    kicker:'PATCH 01 · EMAIL DELIVERABILITY',
+    lede:'网站要发验证码、Magic Link、付款收据，或用 support@你的域名.com 与老外和审核人员沟通。如果邮件全进垃圾箱甚至被拒收，留存和信任瞬间归零。',
+    quote:'2026 年没配 SPF / DKIM / DMARC 的发件域名，不是进垃圾箱，而是直接被退信拒收。',
+    sections:[
+      {title:'2026 年的邮件严管现实',blocks:[
+        P('自 2024 年底至 2026 年，Gmail 和 Outlook / Hotmail 已正式执行严格邮件拦截：未通过身份验证（SPF / DKIM / DMARC）的发件域名，不再只是进垃圾箱，而是被对方服务器直接退信拒收（SMTP 550 错误）。'),
+        CALL('warn','自建 SMTP 是死路','用自己服务器发信的 IP 信誉极差，必进垃圾箱。验证码 / 收据这类事务邮件一律用专门的邮件 API。')
+      ]},
+      {title:'零成本 / 极简邮件架构',blocks:[
+        TERMS([
+          {term:'收信 · 品牌联系邮箱',text:'免费方案：域名托管到 Cloudflare 后开 Email Routing，把 hello@ 和 support@ 免费转发到个人 Gmail，再配 Gmail"以其他身份发送"，低成本实现企业域名邮箱收发。进阶：Zoho Mail 或 Google Workspace，信誉高，适合冷邮件与商务合作。'},
+          {term:'发信 · 系统通知 / 验证码 / 收据',text:'别用自建服务器。用专为开发者造的事务邮件 API：Resend 或 Postmark，免费额度够早期项目，Next.js 集成极快。'}
+        ])
+      ]},
+      {title:'必须配齐的三条 DNS 防伪记录',blocks:[
+        STEP([
+          {title:'SPF（TXT）',text:'声明"哪些服务器被允许代表我的域名发邮件"。'},
+          {title:'DKIM（CNAME / TXT）',text:'给每封发出的邮件盖加密"数字防伪公章"，防止途中被篡改。'},
+          {title:'DMARC（TXT，主机名 _dmarc）',text:'告诉 Gmail / Outlook 遇到伪造你域名发信时怎么处理。新手先设 v=DMARC1; p=none;，验证稳定后改 p=quarantine;，并保持用户投诉率低于 0.1%。'}
+        ]),
+        CALL('tip','落地位置','在 Resend / Postmark 后台绑定域名时，把三条记录完整填进 Cloudflare DNS 并验证通过。这一步属于模块四"上线前工程基建"。')
+      ]}
+    ],
+    tools:['Cloudflare','Cloudflare Email Routing','Resend','Postmark','Zoho Mail','Google Workspace'],
+    takeaway:['未配 SPF/DKIM/DMARC = 直接被 Gmail/Outlook 退信','收信用 Cloudflare Email Routing + 域名邮箱，别用 QQ/163','发信用 Resend/Postmark，别自建 SMTP']
+  },
+  {
+    id:'m18',title:'补丁 2：MoR 与 AdSense 审核通关',sub:'收款防秒拒 · 低价值内容魔咒',
+    kicker:'PATCH 02 · PAYMENT & ADSENSE',
+    lede:'很多开发者功能写完了，却卡在"收款平台屡次拒审"或"AdSense 永远提示低价值内容"。这一节把过审清单摊开讲。',
+    quote:'审核看的不是代码多牛，而是网站像一个真实、完整、能用的产品。',
+    sections:[
+      {title:'主流 MoR 平台 2026 选型',blocks:[
+        TERMS([
+          {term:'Lemon Squeezy',text:'已被 Stripe 收购。基础费率 5% + $0.50（国际卡 / PayPal 另加 1.5%）。对独立开发者、数字产品和早期 SaaS 最友好，审核较快（通常 24–48 小时）。'},
+          {term:'Paddle',text:'基础费率 5% + $0.50 全包，支持全球 200+ 本地支付方式（如 iDEAL），无国际卡加价。审核更严格，适合中长期正经 SaaS 订阅和大额 B2B 收款。'},
+          {term:'Creem 等新兴 MoR',text:'适合非 Stripe 支持地区的备份收款通道，注册门槛对独立开发者较友好。'}
+        ])
+      ]},
+      {title:'MoR 提交审核前"防秒拒"5 项',blocks:[
+        UL([
+          '<b>禁止半成品</b>：不能出现 Coming Soon、占位假数据或点不动的按钮，必须是功能可测的真实在线站。',
+          '<b>公开清晰的定价页</b>：明确写出套餐包含什么、买断还是按月扣费。',
+          '<b>页脚合规三件套齐全</b>：Terms、Privacy Policy、Refund Policy（写明具体天数和条件）。',
+          '<b>域名邮箱一致</b>：申请 MoR 用 support@你的产品域名.com，别用个人 QQ / 163。',
+          '<b>避开禁售类目</b>：未授权的下载器、AI 擦边 / 换脸、绕版权或爬虫代刷类工具，99% 被拒或后期清退。'
+        ])
+      ]},
+      {title:'纯工具站绕过 AdSense"低价值内容"魔咒',blocks:[
+        CALL('warn','只有一个上传框必被拒','爬虫看不懂 JS 交互框，只看到页面不到 50 个单词。孤零零一个工具页去申 AdSense，极易被判 Low Value Content。'),
+        P('过审标准做法：'),
+        UL([
+          '工具交互区下方为每页补 <b>400–800 词</b>高质量内容：分步使用说明、参数对比表、适用场景、4–5 个真实 FAQ。',
+          '全站要有规范导航、独立 <span class="inline-code">/about</span>（真实介绍工具解决的问题与创始人）、<span class="inline-code">/contact</span>、<span class="inline-code">/privacy-policy</span>。',
+          '至少已有 <b>15–25 个</b>被 Google 索引的优质页面再提交审核。'
+        ])
+      ]}
+    ],
+    tools:['Creem','Paddle','Lemon Squeezy','Google AdSense','Google Search Console'],
+    takeaway:['MoR 过审五件套：成品站 + 定价页 + 合规三件套 + 域名邮箱 + 避开禁售','AdSense 低价值内容：每页补 400–800 词 + FAQ','先有 15–25 个被索引的优质页再申 AdSense']
+  },
+  {
+    id:'m19',title:'补丁 3：多语言扩张的黄金时机',sub:'i18n · 别一上线就翻 10 种语言',
+    kicker:'PATCH 03 · I18N EXPANSION',
+    lede:'破除"一上线就翻译成 10 种语言 = 流量乘以 10"的致命误区。多语言是放大器，不是起死回生药。',
+    quote:'先打透英文区，再挑高净值第二市场，最后本地化选词而非字面直译。',
+    sections:[
+      {title:'新站第一天绝对不要铺多语言',blocks:[
+        TERMS([
+          {term:'索引膨胀（Index Bloat）',text:'50 个英文页一上线机翻成 10 种语言，DR 0 新站瞬间变 500 页。Google 会认为在用机器批量制造低质内容，严重拖累抓取预算和全站评分。'},
+          {term:'搜索词水土不服',text:'把英文关键词机翻成日语、德语、西语，往往根本不是当地人真正在 Google 敲的词。翻译一堆页面却毫无搜索量。'},
+          {term:'技术坑多',text:'一旦漏配或配错 <span class="inline-code">&lt;link rel="alternate" hreflang="..." /&gt;</span>，不同语言页面会互相抢排名甚至被判重复。'}
+        ])
+      ]},
+      {title:'正确的多语言扩张三步走',blocks:[
+        STEP([
+          {title:'阶段一 · 先打透单一市场',text:'集中 100% 精力先把英文区（en-US）跑通 —— 验证哪些长尾页有排名、有点击、且真的能赚到美金。'},
+          {title:'阶段二 · 挑高净值第二市场',text:'英文跑通后，优先从消费能力强且非英语本土搜索习惯强的语种切入：德语 de、法语 fr、日语 ja、西班牙语 es。'},
+          {title:'阶段三 · 本地化选词，而非字面直译',text:'针对目标语种重新做一遍本地关键词调研。用清晰的子目录结构（域名.com/de/... 优于子域名），并严格配好双向闭合的 hreflang 标签。'}
+        ])
+      ]}
+    ],
+    tools:['Google Search Console','Semrush','Ahrefs','Google 搜索'],
+    takeaway:['新站首日铺多语言 = Index Bloat + 无效词 + hreflang 坑','英文区先跑通到能赚钱，再开第二语种','按子目录 + 本地重新选词 + 双向 hreflang']
+  },
+  {
+    id:'m20',title:'补丁 4：防过载执行路线图',sub:'三阶段轻重缓急 · 治好完美主义瘫痪',
+    kicker:'PATCH 04 · EXECUTION ROADMAP',
+    lede:'课程信息密度高，新手容易陷入"完美主义瘫痪"——什么都想做，结果迟迟不敢上线。这张表把所有知识点按时间轴切成三步，只做当前阶段该做的事。',
+    quote:'每个阶段只做清单里的事，其余一律暂缓。上线比完美更重要。',
+    sections:[
+      {title:'阶段一 · MVP 上线（第 1–2 周）',blocks:[
+        P('<b>核心目标：</b>把车开上路，验证核心痛点与可用性。'),
+        UL([
+          '选好合规 .com 域名（先过商标 + 案底排雷）',
+          'SERP 验真，避开纯信息词',
+          'SSR / SSG 架构搭出母站 + 1 个招牌创意',
+          '首屏 5 秒文案 + 15 秒免注册体验',
+          'Turnstile 防刷 + API 硬消费上限',
+          '配好 SPF / DKIM / DMARC 与隐私三件套',
+          '接入 GSC + PostHog / Clarity'
+        ]),
+        CALL('warn','这个阶段别做','别一次铺 500 个长尾页；别搞 10 国多语言；别花时间死磕复杂外链；别纠结全站精细化 Schema。')
+      ]},
+      {title:'阶段二 · 冷启动验证（第 1–3 个月）',blocks:[
+        P('<b>核心目标：</b>拿到首批自然流量与第 1 笔美金。'),
+        UL([
+          '灰度放出前 30–50 个确定性长尾页',
+          '盯紧 Clarity 录屏修补 UX 卡点',
+          '提交垂直目录站 + Reddit 真诚分享拿初始外链',
+          '完善页面内容并跑通 MoR / AdSense 审核',
+          '每周看 GSC，把第 4–20 名的词往前提'
+        ]),
+        CALL('warn','这个阶段别做','别因前两周没流量就推倒重来；别在没验证需求前盲目扩充几千页。')
+      ]},
+      {title:'阶段三 · 规模化复利（第 3–6 个月+）',blocks:[
+        P('<b>核心目标：</b>放大护城河，吃稳长期复利。'),
+        UL([
+          '收录率 >80% 后分批扩充至 200–500+ 长尾页',
+          '推出 1–2 个免费"可链接资产"主动换高 DR 外链',
+          '针对高转化长尾页做 GEO 结构化事实与对比表优化',
+          '每季度做一次四象限"僵尸页修剪"与老页翻新',
+          '对最赚钱的页面开启德 / 日 / 法语本地化'
+        ]),
+        CALL('warn','这个阶段别做','别买 Fiverr 垃圾外链；别在 Google 核心算法滚动更新期间恐慌乱改 URL。')
+      ]}
+    ],
+    tools:['Google Search Console','Microsoft Clarity','PostHog','Cloudflare Turnstile'],
+    takeaway:['第 1–2 周只管上线 MVP，别贪多','第 1–3 个月只管拿首批流量和第 1 笔钱','第 3–6 个月才做规模化、GEO、多语言和换外链']
+  },
+  {
+    id:'m21',title:'补丁 5：AI 实战提示词工具箱',sub:'3 条直接复制可用的提示词',
+    kicker:'PATCH 05 · PROMPT TOOLKIT',
+    lede:'把课程里的方法论直接落地成代码和文案。下面三条提示词分别喂给你的 AI（或 Cursor）即可，点右上角"复制"直接拿走。',
+    quote:'方法记住了不算数，能把它变成一条提示词随时调用，才算长在手里。',
+    sections:[
+      {title:'提示词 1 · 美式微文案 & 去翻译腔改写（模块二用）',blocks:[
+        CODE(`你是一位拥有 10 年经验的美国硅谷 SaaS 转化率优化（CRO）文案专家。请帮我审阅并重写以下网页着陆页文案，目标受众是欧美用户。
+
+我的产品信息：
+- 目标用户：[例如：B2B 销售人员 / 独立开发者 / Shopify 卖家]
+- 解决的核心痛点：[例如：发送的冷邮件经常进垃圾箱]
+- 核心机制/卖点：[例如：5 秒检测草稿里的垃圾触发词，无需注册]
+
+我目前的草稿文案：
+[在这里贴入你的 H1、副标题和按钮文字]
+
+请严格按照以下规则输出优化方案：
+1. 严禁使用 "Unlock the power of"、"Elevate"、"Revolutionize"、"Seamless"、"All-in-one" 等空洞的 AI 套话。
+2. 遵循"具体性测试"和"痛点优先"原则：H1 必须包含【具体场景/人群 + 量化或可感知的结果 + 免除的麻烦】。
+3. 按钮（CTA）文案必须体现用户点击后立刻获得的结果（如 "Check My Email Free →"），不要用 "Submit" 或 "Get Started"。
+4. 请给出 3 个不同风格的美式地道版本（极简直接风 / 强调速度风 / 强调隐私安全风），并简要说明为什么这么改。`,'PROMPT 01 · COPYWRITING')
+      ]},
+      {title:'提示词 2 · 上线前安全与 Technical SEO 审计（模块四用）',blocks:[
+        CODE(`请你作为一名资深全栈安全工程师与 Google Technical SEO 专家，对当前项目代码库进行上线前 P0 级全面审计。请逐项检查以下清单，指出具体的文件路径和漏洞风险，并给出修复代码建议：
+
+【Technical SEO 审计】
+1. 公开展示页面（首页、工具页、长尾页）是否全部采用 SSR/SSG/ISR 渲染，确保关闭 JavaScript 后 HTML 源码中依然包含完整的 H1、正文和 Meta 标签？
+2. 每个合法公开页面是否都正确配置了唯一且干净的自指 Canonical 标签（<link rel="canonical">），以及唯一的 Title 和 Description？
+3. 动态 sitemap.xml 和 robots.txt 是否已配置，且没有把需要屏蔽的后台/API 路径或低质参数页暴露出来？
+4. 访问不存在的动态长尾路径时，是否真实返回 HTTP 404 状态码（而非 Soft 404）？
+
+【防破产与数据安全审计】
+5. 检查所有前端代码与环境变量，是否绝对没有泄露任何服务端私密 API Key（如非 NEXT_PUBLIC_ 前缀的密钥）？
+6. 检查后端 API 路由：消耗大模型/第三方算力的接口是否已加入后端 IP/用户级 Rate Limiting（限流）、输入长度硬截断，以及防机器人校验？
+7. 检查数据库权限（如 Supabase RLS）：是否每一张表都开启了严格的 Row Level Security，确保用户只能读写属于自己的行数据，绝对不存在 'USING (true)' 的越权漏洞？
+8. 检查支付与积分回调接口：是否验证了支付平台（Stripe/Paddle/Lemon Squeezy 等）的 Webhook 加密签名，并做好了防重复并发请求的幂等性处理？`,'PROMPT 02 · PRE-LAUNCH AUDIT')
+      ]},
+      {title:'提示词 3 · GSC 数据"手术刀"诊断（模块六用）',blocks:[
+        CODE(`你是一位精通 Google Search Console（GSC）数据分析的资深 SEO 增长专家。以下是我从 GSC 导出的最近 28 天【查询词与网页表现数据】（CSV/表格格式）。
+
+[在这里贴入你筛选出的前 50–100 条数据，包含：Query, Page, Clicks, Impressions, CTR, Position]
+
+请帮我做一次外科手术式诊断，并按优先级输出行动清单：
+1. 【近战打击词（Striking Distance）】：挑出平均排名在 4.0 到 20.0 之间、但展示量（Impressions）较高的关键词。针对其中最值得优化的 5 个词，告诉我应该如何在对应页面修改 H1、补充哪些子话题或增加哪些内链来把它们推进前 3 名。
+2. 【高展现低点击漏水词】：挑出排名在前 5 名（Position <= 5）、展现量高但点击率（CTR）明显偏低的词，为对应页面各写出 2 个更有吸引力的英文新 Title 和 Meta Description 建议。
+3. 【关键词自相残杀排查】：检查是否有同一个核心查询词同时分散在多个不同 URL 上互相抢流量，指出冲突的 URL 并建议保留哪一个、301 合并哪一个。
+4. 【意外新需求雷达】：找出我可能没专门做过主推优化、但已经开始获得自然展现的"意外长尾词"，建议我可以据此裂变出哪 3 个新的"确定性长尾工具页"。`,'PROMPT 03 · GSC DIAGNOSIS')
+      ]}
+    ],
+    tools:['ChatGPT','Claude','Cursor'],
+    takeaway:['提示词 1：把空话文案改成具体性测试通过的美式 H1','提示词 2：上线前 8 项 SEO + 安全 P0 审计','提示词 3：GSC 导出数据直接出优先级行动清单']
   }
 ];
 
@@ -771,7 +993,12 @@ const FLASHCARDS = [
   {front:'Striking Distance',back:'近战打击词｜GSC 里第 4–20 名、展现高的词。微调标题和内容就能推进前三，杠杆最高。'},
   {front:'Content Pruning',back:'僵尸页修剪｜每 90 天四象限体检：Keep / Refresh / Consolidate / Prune，算法更新期别动刀。'},
   {front:'Aha! Moment',back:'15 秒顿悟｜工具摆首屏、Try an example 一键体验，看到成果后再弹登录墙。'},
-  {front:'AI Slop Aesthetic',back:'AI 流水线审美｜深色 + 紫蓝渐变发光 + 满屏默认图标。欧美用户警惕，要留白 + 单主色 + 真实截图。'}
+  {front:'AI Slop Aesthetic',back:'AI 流水线审美｜深色 + 紫蓝渐变发光 + 满屏默认图标。欧美用户警惕，要留白 + 单主色 + 真实截图。'},
+  {front:'UDRP',back:'统一域名争议解决政策｜域名含大厂商标可被无偿没收。买前先去 USPTO 查 Class 9/42。'},
+  {front:'SPF / DKIM / DMARC',back:'邮件三件套｜没配齐 Gmail/Outlook 直接 SMTP 550 退信。收信用 Email Routing，发信用 Resend/Postmark。'},
+  {front:'Low Value Content',back:'AdSense 低价值内容｜只有上传框的页爬虫只看到 <50 词。补 400–800 词 + FAQ + 15–25 个索引页再申。'},
+  {front:'hreflang',back:'多语言标签｜配错会让不同语言页互抢排名。用子目录 /de/，等英文区跑通再扩。'},
+  {front:'完美主义瘫痪',back:'什么都想做导致不敢上线。按三阶段路线图：1–2 周 MVP，1–3 月首批流量，3–6 月才规模化。'}
 ];
 
 const QUIZ = [
@@ -794,7 +1021,11 @@ const QUIZ = [
   {scene:'GSC 里一个词排第 9 名、展现很高但点击少；同时你还有 10 个新页躺在第 15 名。',q:'这周 30 分钟应该优先做什么？',opts:['给 10 个新页各写 5 篇外链文章','优化第 9 名那页的 title/H1/首段并补齐竞品有的参数，28 天后看对比','再批量发 100 个新页','删掉第 9 名的页重做'],ans:1,why:'前 3 名吃掉近 70% 点击，第 8–10 名趋近于零。把第 9 名推进前三几乎不用从零攒外链，杠杆远高于铺新页。'},
   {scene:'运营第 5 个月，站里有 200 个长尾页。其中 60 个半年零点击零展现，还有两页目标意图完全重合、互抢排名。',q:'季度修剪该怎么处理？',opts:['全部保留，页面越多权重越高','零点击僵尸页删掉返 410/404；意图重合的两页合并，弱页 301 到强页；正在掉排名的页做 Refresh','给这 60 页各买一条外链','把整站 noindex 一周再恢复'],ans:1,why:'四象限体检：Keep / Refresh / Consolidate / Prune。零价值页浪费抓取预算、拉低整站质量；重合页要合并集中权重。注意算法更新期别动刀。'},
   {scene:'你想让 ChatGPT / Perplexity 在用户问"好用的冷邮件垃圾词检测器"时推荐你的站。',q:'哪个动作最有效？',opts:['在官网写 100 篇"我们最好"的文章','在 H2 下第一句给带数字的可引用事实块，并把工具提交到 Product Hunt / AlternativeTo，去 Reddit 真实分享实测数据','刷 1000 个虚假品牌提及','给 Google 专门做 llms.txt 走快捷通道'],ans:1,why:'AI 引擎看的是结构化可引用内容 + 第三方真实讨论。Google 官方说 llms.txt 对它不是快捷通道，刷虚假提及也没用。'},
-  {scene:'你发现一个长尾词能裂变出 for Shopify / for US Visa / for Kindle 等 50 个页面，但数据库里共有 5000 种组合，新域名 DR 0。',q:'正确放量节奏是？',opts:['第一天全生成 5000 页提交给 Google，抢先占坑','先上 30–50 个需求最确定的页，观察 2–4 周；收录率 >80% 后每周加 50–100 页；缺独有数据的组合加 noindex','只做 5 个页，其余永远不做','按 Excel 排列组合全部生成，但每个页面标题不同'],ans:1,why:'新站首日万页 = Index Bloat，会被贴低质批量站标签甚至拖累核心首页。要三阶段灰度 + Quality Gates 质量门控。'}
+  {scene:'你发现一个长尾词能裂变出 for Shopify / for US Visa / for Kindle 等 50 个页面，但数据库里共有 5000 种组合，新域名 DR 0。',q:'正确放量节奏是？',opts:['第一天全生成 5000 页提交给 Google，抢先占坑','先上 30–50 个需求最确定的页，观察 2–4 周；收录率 >80% 后每周加 50–100 页；缺独有数据的组合加 noindex','只做 5 个页，其余永远不做','按 Excel 排列组合全部生成，但每个页面标题不同'],ans:1,why:'新站首日万页 = Index Bloat，会被贴低质批量站标签甚至拖累核心首页。要三阶段灰度 + Quality Gates 质量门控。'},
+  {scene:'你准备注册 NotionHelper.com，因为 Notion 很火，你觉得精准匹配域名SEO最好。',q:'最该先做什么？',opts:['直接买，抢注要紧','先去 USPTO 查商标：含大厂商标名可能被 UDRP 无偿没收，还会触发收款和 AdSense 风控','换个 .xyz 便宜后缀就没事','买了再说，做起来后大厂会来合作'],ans:1,why:'商标自杀是双重雷：UDRP 没收域名 + Stripe/MoR/AdSense 知识产权风控冻结资金。买前 1 分钟查 USPTO。'},
+  {scene:'你的工具站要给用户发注册验证码和付款收据，但你打算用自己的服务器 SMTP 发信，没配任何 DNS 记录。',q:'会发生什么？',opts:['正常进收件箱','Gmail/Outlook 直接 SMTP 550 退信，因为没过 SPF/DKIM/DMARC 验证','会被当成垃圾邮件但不影响','只要邮件写得好就行'],ans:1,why:'2026 年未验证发件域名会被直接退信。用 Resend/Postmark 发事务邮件，并在 Cloudflare DNS 配齐 SPF/DKIM/DMARC。'},
+  {scene:'你的英文工具站刚上线 1 周，你想顺便机翻成 10 种语言，把流量乘以 10。',q:'正确判断是？',opts:['立刻翻，越早覆盖越多流量','别急：英文区没跑通就铺多语言 = Index Bloat + 机翻词无搜索量 + hreflang 坑','翻成 3 种就够了','用子域名每个语种开一个站'],ans:1,why:'多语言是放大器不是救命药。先把 en-US 跑到有排名有美金，再挑德语/日语等高净值市场，用子目录 + 本地重新选词 + 双向 hreflang。'},
+  {scene:'你的工具页只有一个上传框，功能完美，你去申请 AdSense 却一直被拒，提示低价值内容。',q:'最有效的解法是？',opts:['再做个更好看的上传框','工具下方补 400–800 词实用内容 + FAQ，配齐 about/contact/privacy，等 15–25 个页被索引再申','反复提交审核','换一个广告平台'],ans:1,why:'爬虫看不懂 JS 交互，只看到不到 50 词。补实打实的文字内容和完整站点结构，是过 Low Value Content 审核的标准做法。'}
 ];
 
 const ORDER_STEPS = [
@@ -846,7 +1077,7 @@ const MAP_STAGES = [
   {icon:'🚀',n:'STAGE 05',title:'上线 · 域名托管与收银台',sub:'目标：全球可访问 + 能收钱',
    text:'Cloudflare Pages/Workers 托管，绑定 .com 域名开 HTTPS。装上 GA + GSC，接 AdSense 或 Creem。网站底部必须有 Privacy Policy / Terms / Contact 法律三件套。',
    tools:['Cloudflare','Cloudflare Registrar','Porkbun','Google Analytics','Google Search Console','Google AdSense','Creem','Dodo Payments','Vercel'],
-   checks:['独立域名 + HTTPS + 手机正常','隐私政策 / 条款 / 联系页齐全','GA 与 GSC 已装','收款通道已接通','robots.txt 未误禁抓取']},
+   checks:['独立域名 + HTTPS + 手机正常','域名过商标与案底排雷','隐私政策 / 条款 / 联系页齐全','SPF / DKIM / DMARC 已配','GA 与 GSC 已装','收款通道已接通','robots.txt 未误禁抓取']},
   {icon:'📈',n:'STAGE 06',title:'增长与运营 · 脉冲破冰 + 手术刀复利',sub:'目标：第一批真实用户 + 长期复利曲线',
    text:'前 14 天提交 GSC 和 Bing、批量刷目录站；前 30 天 Reddit 干货回复 + #BuildInPublic + 短视频；2–12 个月用条件渲染的差异化长尾页分批灰度放量，每周 30 分钟用 GSC 推进第 4–20 名潜力词，每季度做一次僵尸页四象限修剪。',
    tools:['Google Search Console','Bing Webmaster Tools','Reddit','X / Twitter','TikTok','YouTube Shorts','Product Hunt','AlternativeTo','BetaList','Indie Hackers','Microsoft Clarity','Plausible'],

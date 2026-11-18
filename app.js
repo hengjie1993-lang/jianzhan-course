@@ -55,6 +55,12 @@ function renderBlocks(blocks){
       case 'callout':{
         return `<div class="callout ${b.kind}"><div><span class="ct">${b.title}</span><p>${b.text}</p></div></div>`;
       }
+      case 'code':{
+        return `<div class="code-block">
+          <div class="code-head"><span>${esc(b.label||'PROMPT')}</span>
+          <button class="code-copy" data-copy="${encodeURIComponent(b.text)}">复制</button></div>
+          <pre class="code-body">${esc(b.text)}</pre></div>`;
+      }
       default: return '';
     }
   }).join('');
