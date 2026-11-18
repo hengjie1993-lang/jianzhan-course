@@ -1,6 +1,6 @@
 /* ============================================================
    建站教练互动课程 · 内容数据
-   内容来源：《阿无的建站教练课程》（WPS 备份版，2026-11-16）
+   内容来源：《阿无的建站教练课程》（桌面完整版，2026-11-18；含 9 节基础/专题课 + 6 堂深度进阶课）
    ============================================================ */
 
 const TOOLS = [
@@ -89,7 +89,19 @@ const TOOLS = [
   {name:'淘宝',cat:'中文视角',url:'https://www.taobao.com/',desc:'搜"模板 / 工具 / 计算表 / 生成器"，看虚拟商品热销榜。',note:'国内有人付费=全人类刚需'},
   {name:'拼多多',cat:'中文视角',url:'https://www.pinduoduo.com/',desc:'低价虚拟商品销量验证了痛点强度。',note:'9.9 元的表格也能月销几万单'},
   {name:'小红书',cat:'中文视角',url:'https://www.xiaohongshu.com/',desc:'效率吐槽 / 神器推荐，找已被验证的傻瓜式交互。',note:'去英文世界搜有没有网页版'},
-  {name:'微信',cat:'中文视角',url:'https://weixin.qq.com/',desc:'国内小程序生态的微痛点工具，是英文网页版的现成蓝本。',note:'做本地化降维打击'}
+  {name:'微信',cat:'中文视角',url:'https://weixin.qq.com/',desc:'国内小程序生态的微痛点工具，是英文网页版的现成蓝本。',note:'做本地化降维打击'},
+  // --- 进阶深度课：信任 / 工程 / 分析 ---
+  {name:'Pew Research Center',cat:'竞品调研',url:'https://www.pewresearch.org/',desc:'权威调研：AI Overviews 出现时自然结果 CTR 从 15% 跌到 8% 的原始出处。',note:'引用硬数字前回源头核对'},
+  {name:'StackExchange',cat:'需求验证',url:'https://stackexchange.com/',desc:'技术问答社区，SERP 里出现就是"软柿子信号"。',note:'Reddit / Quora / StackExchange 三件套'},
+  {name:'Quora',cat:'需求验证',url:'https://www.quora.com/',desc:'问答平台，首页出现往往说明谷歌找不到好工具页。',note:'与 Reddit 同为软柿子信号'},
+  {name:'Next.js',cat:'建站开发',url:'https://nextjs.org/',desc:'App Router 的 SSR / SSG / ISR，让源码里直接躺完整标题与正文。',note:'SEO 页面别用纯 CSR'},
+  {name:'Astro',cat:'建站开发',url:'https://astro.build/',desc:'内容型静态站框架，默认零 JS，SEO 页面天然友好。',note:'与 Next.js 二选一做 SSG'},
+  {name:'Cloudflare Turnstile',cat:'建站开发',url:'https://www.cloudflare.com/products/turnstile/',desc:'免费无感人机盾，挡掉约 95% 自动化脚本，不用找红绿灯。',note:'套在所有消耗算力的按钮 / 接口前'},
+  {name:'Upstash',cat:'建站开发',url:'https://upstash.com/',desc:'Serverless Redis，做后端硬限流与结果缓存，防 API 账单爆炸。',note:'前端限流没用，必须服务端锁'},
+  {name:'Plausible',cat:'流量增长',url:'https://plausible.io/',desc:'隐私友好的轻量统计，看流量来源与关键事件漏斗。',note:'GA4 的轻量化替代'},
+  {name:'Umami',cat:'流量增长',url:'https://umami.is/',desc:'开源可自托管的简洁统计，免费档够用。',note:'与 Plausible 二选一'},
+  {name:'PostHog',cat:'流量增长',url:'https://posthog.com/',desc:'产品分析 + 漏斗 + 会话回放，免费档可用。',note:'埋好首页→工具→付费墙→支付四事件'},
+  {name:'Microsoft Clarity',cat:'流量增长',url:'https://clarity.microsoft.com/',desc:'免费录下真实欧美访客的鼠标轨迹、热力图与愤怒点击。',note:'看 15 分钟回放就能找到 UX 致命伤'}
 ];
 
 /* block helpers */
@@ -481,6 +493,245 @@ const MODULES = [
     ],
     tools:['SteamDB','itch.io','YouTube Shorts','TikTok','Roblox','GameDistribution','GameMonetize','NYT Games','Neal.fun','Poki','CrazyGames','Google AdSense','Google Search Console','Creem'],
     takeaway:['路线 3 工具伴侣站：开发易、版权低、 AdSense 易过','母站用容器型品牌名 + Hub 骨架，别绑单一游戏','3 根红线：COPPA / 广告间距 / 文字含金量']
+  },
+  {
+    id:'m10',title:'需求深潜与 SERP 解剖学',sub:'两个幻觉 · 意图四象限 · 解剖五步法',
+    kicker:'DEEP DIVE 04 · SERP ANATOMY',
+    lede:'前面是"拿着雷达在地图上扫目标"，这一课是用手术刀剖开 Google 搜索结果页（SERP），判断这个需求是真金白银的矿，还是一脚踩空的沼泽。',
+    quote:'凡是"用一段文字就能回答清楚"的需求，在 2026 年几乎都没有独立开发的商业价值。',
+    sections:[
+      {title:'先破除两个致命幻觉',blocks:[
+        P('幻觉一：<b>"月搜 5 万，排第一就躺赚"</b>。Similarweb 数据：约 68%–69% 的 Google 搜索零点击结束；Pew Research 研究显示出现 AI Overviews 后自然结果 CTR 从 15% 跌到 8%。'),
+        CALL('warn','教练铁律 ①','凡是"一段文字就能回答清楚"的需求，2026 年几乎没有独立开发价值。必须提供 AI 文本框给不了的东西：<strong>文件处理、实时计算、可视化交互、工作流集成、专属数据集</strong>。'),
+        P('幻觉二：<b>"Ahrefs / Semrush 显示 KD 只有 10，稳了"</b>。第三方 KD 只统计"排名前 10 的页面有多少外链域名"，它不知道页面有没有塞满广告、顶部是不是 AI 摘要、前排是不是 Reddit 或微软 / Adobe 官方子页。'),
+        CALL('warn','教练铁律 ②','工具数据只是初筛。<strong>用美国 IP 无痕浏览器亲眼看 Google 第一页（SERP），才是唯一真理。</strong>')
+      ]},
+      {title:'搜索意图四象限与 2026 存活率',blocks:[
+        P('同样敲进 Google 的词，意图天差地别。放进四个象限，一眼知道该碰谁、该躲谁：'),
+        GRID([
+          {title:'1 · 纯信息型（别碰）',text:'how to convert pdf to word / what is CAC in SaaS。AI Overviews 重灾区，用户看完顶部 123 步骤就关页面。存活率极低。'},
+          {title:'2 · 商业调研型（小心切入）',text:'best AI headshot generator / Notion vs Obsidian。商业调研词出现 AI 摘要比例暴涨 71%。用户做决定前仍想看真实对比表和价格陷阱，可做母站辅助文章，别当核心卖点。'},
+          {title:'3 · 工具交互型（主攻）',text:'compress jpg to 50kb / JSON to TypeScript converter。AI 没法把本地图片精准压到 50KB 还不糊，用户必须点进网页才能完成。黄金矿区。'},
+          {title:'4 · 交易 / 行动型（必抢）',text:'free online invoice generator no sign up / buy bulk QR code。交易型词触发 AI 摘要比例反而下降 5%，Google 知道用户已准备干活，直接给工具页最有效。'}
+        ]),
+        FORM('砍掉 1（纯信息），慎用 2（商业评测），All-in 3（工具交互）和 4（交易行动）。')
+      ]},
+      {title:'SERP 解剖学五步法',blocks:[
+        P('挖到词后先别写代码、别买域名。开无痕（挂美国 IP，或在 URL 末尾加 <span class="inline-code">&amp;gl=us&amp;hl=en</span> 强制看美国英文结果），按 5 步解剖：'),
+        STEP([
+          {title:'第 1 步 · 测首屏含金量',text:'只看第一眼：顶部 4 条广告 + 半屏 AI Overview + Google 自带小工具 = 致命红灯，就算排自然第一也在第 2、3 屏。广告 ≤1–2 条、无官方工具 = 健康绿灯。'},
+          {title:'第 2 步 · 查形态匹配度',text:'看自然前 5 名是什么形态。全是单页小工具 → Google 判定用户要"立刻动手用"，别写评测长文去竞争。全是长文 / Reddit → 可能是市场缺好工具，谷歌被迫拿文章凑数。'},
+          {title:'第 3 步 · 盯软柿子信号（关键）',text:'前 5 名若全是 DR 90+ 巨头，新站硬碰就是送死。出现以下任意 2 个即可钻：Reddit / Quora / StackExchange 帖子；DR&lt;20 的老破小站；标题答非所问（意图未满足）。'},
+          {title:'第 4 步 · 痛点体检（止痛药 vs 维生素）',text:'卡点强度：用户是否卡在工作流里，不解决就干不了下一步？时间 / 金钱杠杆：帮 SaaS 创始人算清 ROI 是止痛药，帮学生生成艺术字是维生素。复购频率：一次性做流量入口页，高频复用才值得深做订阅。'},
+          {title:'第 5 步 · 测长尾裂变潜力',text:'去 Google 下拉框、People Also Ask、竞品 sitemap.xml 看能否按格式 / 平台（for Instagram / Shopify / US Visa）或对象 / 行业（for Dentists / Podcasters）裂变。每个裂变页参数必须真不一样，才符合下一课的抗惩罚 pSEO。'}
+        ])
+      ]},
+      {title:'实战对比：同样的"Email 营销"，一死一活',blocks:[
+        GRID([
+          {title:'A · how to write a cold email',text:'纯信息型；首屏被 AI Overview 给出 5 段完整邮件模板；前 5 名 HubSpot / Indeed / Harvard Business Review（DR 90+）。判词：死路一条，零点击率极高，巨头环伺，毫无付费理由。'},
+          {title:'B · cold email spam word checker',text:'工具交互型；AI 没法实时标红高危触发词；工作流强卡点（进垃圾箱域名就废）；前排有简陋工具和 Reddit"求推荐"帖；还能裂变 Gmail spam checker 等。判词：极品切入点。'}
+        ])
+      ]}
+    ],
+    tools:['Google 搜索','Similarweb','Semrush','Ahrefs','Pew Research Center','Reddit','Quora','StackExchange'],
+    takeaway:['先破幻觉：文字能答完的需求没价值，KD 分数只是初筛','四象限：砍信息型，主攻工具交互 + 交易行动型','五步解剖 SERP，找到 ≥2 个软柿子信号才动手']
+  },
+  {
+    id:'m11',title:'欧美原生感与信任工程',sub:'黄金 5 秒 · 信任工程 · 15 秒 Aha!',
+    kicker:'DEEP DIVE 05 · TRUST ENGINEERING',
+    lede:'技术极强、SEO 也通，网站却没留存没人付钱？根因往往不是功能，而是欧美用户打开那一瞬间响了警报："这看着像 AI 批量生成的套壳垃圾，我不敢交信用卡号。"',
+    quote:'欧美科技圈尊重 Indie Hacker —— 真诚反而比假装大公司更有安全感。',
+    sections:[
+      {title:'第一印象：首屏黄金 5 秒',blocks:[
+        P('研究显示 78% 的访问者前 5 秒仅凭首屏决定去留。三个常见坑：<b>AI 味翻译腔</b>（Unlock the power of AI / Elevate your workflow）、<b>功能自嗨</b>（用户只知道自己有麻烦，不关心你用了什么大模型）、<b>装饰性废像素</b>把干活区域挤到屏幕下面。'),
+        GRID([
+          {title:'1 · 通过具体性测试的 H1',text:'把标题放到 3 个竞品网站上是否也成立？成立就是废话。公式：具体人群/场景 + 明确结果 + 核心机制。反例 Streamline your email marketing with AI；正例 Spot spam triggers in your cold emails in 5 seconds — before you hit send.'},
+          {title:'2 · 直击痛点的副标题',text:'1–2 句说明"用我能具体省下什么"。例：Paste your draft below. Get an instant deliverability score and word-by-word fixes. No sign-up required.'},
+          {title:'3 · 结果导向的单一 CTA',text:'别写 Submit / Start，写用户点完立刻得到什么：Check My Email Free → / Compress Image Now / Generate My Invoice。'},
+          {title:'4 · 轻量信任微标',text:'按钮下方一行小字：Free to try · No credit card required · Processed locally in browser。'}
+        ])
+      ]},
+      {title:'一眼可信的信任工程',blocks:[
+        TERMS([
+          {term:'千万别用假老外头像 + 假好评',text:'2026 年欧美用户一眼识破 AI 假头像和假评论，不仅不增信，反而摧毁信任（Google 也明确打击伪造背书）。用真实"独立匠人故事"：Hi, I\'m [英文名]. I built this tool because I got tired of paying $29/mo just to convert a few files safely. 没评价就先放真实使用数据（14,200+ PDFs merged safely），或上线后去 Reddit / X 收 2 条真人留言。'},
+          {term:'隐私与数据安全声明（工具站核武器）',text:'纯前端工具在操作框下方写明：🔒 100% Private: processing happens inside your browser. Your files never leave your device. 需上传服务器则写 Files are encrypted and auto-deleted within 1 hour. Never used for AI training. 一句就能拉高冷流量转化。'},
+          {term:'交易与法律透明',text:'页脚三件套：Privacy Policy（提 GDPR / CCPA）、Terms of Service、Refund Policy（7-day money-back）。订阅制再加一句 Cancel anytime in 1 click from your dashboard —— 美国 FTC 推"一键取消"，这能极大消除付费犹豫、压低拒付率（Chargeback）。'}
+        ])
+      ]},
+      {title:'15 秒 Aha! Moment 与去 AI 廉价感',blocks:[
+        P('服务的是从 Google 点进来、没耐心的陌生人。国内常见反面习惯：进来先弹登录注册墙 —— 冷流量场景这道墙直接杀死 80% 以上访客。'),
+        STEP([
+          {title:'体验前置，登录墙后置',text:'工具站把核心交互区（输入框 / 上传区 / 示例按钮）摆首屏。放一个 Try an example 按钮，用户懒得找文件时点一下，3 秒看到惊艳结果 = Aha! Moment。'},
+          {title:'在对的时刻拦人',text:'等他看到成果、准备下载高清无水印版、导出完整报告、或第 3 次操作时，再弹登录或付费框。此时已体验到价值，转化意愿翻倍。'},
+          {title:'视觉去 AI 廉价感',text:'避开"深色背景 + 紫蓝渐变发光边框 + 满屏默认图标 + 无重点 6 宫格"（AI Slop Aesthetic）。学 Stripe / Linear / Notion：大量留白；黑白灰 + 1 种主色只涂 CTA；Inter / Plus Jakarta Sans / Geist，行高 1.5–1.6、单行 60–75 字符；真实产品截图 / 5 秒 GIF &gt; 抽象插画。'}
+        ])
+      ]},
+      {title:'上线前速查清单',blocks:[
+        UL([
+          '5 秒测试：陌生人能 3 秒说出"这站给谁用、解决什么具体问题"吗？',
+          '微文案测试：还有没有 Unlock / Elevate / Revolutionary 这类空洞词？按钮是不是具体行动结果？',
+          '零门槛体验：不登录能否 15 秒内体验核心功能或看到真实 Demo？',
+          '真实验证：去掉假头像假评价，换成真诚创始人邮箱和真实隐私声明了吗？',
+          '合规底线：页脚隐私政策、退款政策、域名专属邮箱（support@你的域名.com，绝不用 QQ / 163 / Gmail）齐了吗？'
+        ])
+      ]}
+    ],
+    tools:['ChatGPT','Claude','v0','Microsoft Clarity'],
+    takeaway:['首屏 4 要素：具体 H1 + 痛点副标题 + 结果 CTA + 信任微标','真诚 > 假背书；隐私与安全声明是工具站核武器','体验前置、登录墙后置，15 秒造出 Aha! Moment']
+  },
+  {
+    id:'m12',title:'抗算法惩罚的高级 pSEO',sub:'规模化内容滥用 · 四大法则 · 灰度放量',
+    kicker:'DEEP DIVE 06 · PSEO',
+    lede:'品牌母站沉淀信任，招牌创意惊艳留存，而真正每天从 Google 白嫖几千精准流量的发动机，是"确定性搜索长尾页"—— 程序化 SEO。这也是 2026 死伤最惨重的战场。',
+    quote:'500 个个个能排进前十且有真实点击的页面，完胜 5,000 个无人问津的僵尸页。',
+    sections:[
+      {title:'2026 生死红线：Google 到底杀死了什么',blocks:[
+        P('2026 年 3 月起 Google 严格执行 <b>Scaled Content Abuse（规模化内容滥用）</b>，大批老式 pSEO 站一夜流量暴跌 50%–80%，甚至整站归零。'),
+        P('逻辑变了：过去看"怎么生产的"（AI 写完再人工改改就安全）；2026 看"为什么而存在、有没有独特价值" —— 无论 AI 生成还是纯手写，只要批量铺高度相似、没有独立价值的页面抢排名，统统算作弊，且往往触发整站降权（Sitewide Demotion）。'),
+        CALL('insight','为什么 Zapier / Wise / Canva 活得滋润','Zapier 5 万+集成页月流量 1600 万、Wise 汇率页 6000 万、Canva 模板库破亿。区别只有一句：❌ 已死的 pSEO = 批量铺"换汤不换药的文本"；✅ 永生的 pSEO = 批量铺<strong>微工具 / 预设工作台 / 独有数据集</strong>，每页独立解决一个具体场景问题。')
+      ]},
+      {title:'防弹 pSEO 四大法则',blocks:[
+        STEP([
+          {title:'法则 1 · 条件渲染，绝不换词填空',text:'做图片裁剪工具吃平台长尾：/resize-for-shopify 自动锁 2048×2048、1:1、≤20MB、推荐 WebP/JPG + 真实官方规格表；/resize-for-us-visa 切到 2×2 英寸（600×600）、&lt;240KB、带人脸辅助线和白底检测。遮住标题，用户能一眼看出两页不是同一个东西吗？能，就安全。'},
+          {title:'法则 2 · 合并同类意图（Intent Cluster）',text:'compress jpg for email 和 reduce jpg size for email 在 Google 眼里 100% 重合。拆两页 = 关键词互搏（Cannibalization）+ 冗余判定。若两词前 5 名有 3 个以上完全相同，合并成一个超强页面，集中火力。'},
+          {title:'法则 3 · 枢纽-辐射架构（Hub-and-Spoke）',text:'Hub（/tools 或 /image-resizer）承接大词和外链；Spokes（所有场景页）挂在下面，从首页点击 ≤3 次可达。每页顶部面包屑把信号反哺母站，底部 Related Scenarios 让爬虫爬完全站、提升多页停留时间。'},
+          {title:'法则 4 · 拒绝首日万页',text:'新站第一天生成 5000 页 = Index Bloat，被贴"低质批量站"标签，核心首页一起拖下水。三阶段灰度：① 冷启动 30–50 页观察 2–4 周；② 收录率 &gt;80% 后每周加 50–100 页到 200–500 页；③ 写死 Quality Gates，缺独有数据的组合不生成或加 noindex。'}
+        ])
+      ]},
+      {title:'两件技术防弹衣',blocks:[
+        TERMS([
+          {term:'自指 Canonical 标签',text:'每个合法长尾页 <head> 里放指向自己干净 URL 的 <span class="inline-code">&lt;link rel="canonical" ... /&gt;</span>。别人带 ?utm_source=xxx 分享也不会被判成重复页面。'},
+          {term:'诚实的 Schema 结构化数据',text:'用 JSON-LD 标明这是 SoftwareApplication 还是 FAQPage。铁律：页面上肉眼看得到的内容才能写进 Schema，虚标假的 4.9 分 1000 评价，2026 年查到就是惩罚。'}
+        ]),
+        FORM('pSEO 不是"找 1000 个词让 AI 批量写文章"，而是"找一个可复用的刚需处理模型，为每个高价值场景用真实差异化参数定制独立微产品页，再分批有序地喂给 Google"。')
+      ]}
+    ],
+    tools:['Google Search Console','Google 搜索','Semrush','Ahrefs','GitHub'],
+    takeaway:['Google 杀的是"无独特价值的相似页"，不是程序化本身','条件渲染 + 真实参数，让每页都是独立好用的微工具','30–50 页起步灰度放量，写死质量门控防 Index Bloat']
+  },
+  {
+    id:'m13',title:'生产级工程素养',sub:'渲染与指标 · 防破产 · P0 安全 · 千里眼',
+    kicker:'DEEP DIVE 07 · ENGINEERING',
+    lede:'2026 行业审计：用 Cursor / Lovable / Bolt / v0 快速做出的站，上线前安全与工程就绪平均分只有 42/100，89% 存在数据库权限裸奔。AI 的目标是"跑通 Demo"，不是替你扛住黑客和高并发账单。',
+    quote:'功能跑通只完成了 50%，补齐渲染、限流、权限和埋点，才有上线印美金的资格。',
+    sections:[
+      {title:'渲染模式生死线与核心网页指标',blocks:[
+        P('很多 AI 生成器默认产出 CSR（客户端渲染）：右键查看源代码只有 <span class="inline-code">&lt;div id="root"&gt;&lt;/div&gt;</span>，全靠 JS 拼字。这是双重自杀：Google 要二次渲染（Two-Wave Indexing），页面一多收录极慢；ChatGPT / Perplexity / Claude 等 AI 爬虫<strong>根本不执行 JavaScript</strong>，你在 AI 搜索眼里直接隐形，GEO 流量归零。'),
+        TERMS([
+          {term:'渲染铁律',text:'所有要从 Google / AI 抢流量的页面（母站、长尾工具页、文档博客），第一天就指定 Next.js App Router 的 SSR / SSG / ISR 或 Astro，确保"查看源代码"时标题、正文、Meta、内链都在 HTML 里。只有登录后的后台才用 CSR。'},
+          {term:'Core Web Vitals（移动端 75 分位）',text:'LCP &lt; 2.5s（首屏核心框出来快）；CLS &lt; 0.1（按钮别跳）；INP &lt; 200ms（工具站命门：每次点击 / 输入多久出反馈）。让 AI 别把重型图标图表库打包进首屏，耗时计算放后端或 Web Worker，非首屏懒加载。'},
+          {term:'爬虫基建三件套',text:'动态 sitemap.xml 只放已放量的有效页；精准 robots.txt 放行 Googlebot / OAI-SearchBot / PerplexityBot，屏蔽 /api/ /admin/ /dashboard/；不存在的 URL 返回真 404 / 410，别搞 Soft 404 一律 200。'}
+        ])
+      ]},
+      {title:'防破产四件套：保护你的 API 钱包',blocks:[
+        GRID([
+          {title:'① 无感人机盾 Turnstile',text:'Cloudflare Turnstile 完全免费，不逼用户找红绿灯。域名托管到 Cloudflare，在所有消耗算力的按钮 / 接口前套上，挡掉约 95% 自动化脚本。'},
+          {title:'② 后端硬限流',text:'前端弹窗"每天只能用 3 次"没用，懂技术的人绕过前端直接调接口。用 Upstash Redis 或 Cloudflare Rate Limiting 在服务端按 IP + 用户 ID 锁死每分钟 / 每天上限。'},
+          {title:'③ 输入与 Token 硬天花板',text:'后端强制截断最大输入（如 3000 字符）、写死 max_tokens，拒绝超长文本和递归死循环。再去 OpenAI / Claude 后台设 Hard Spend Limit 兜底。'},
+          {title:'④ 高频结果缓存',text:'1000 人点同一个 Demo 示例不能调 1000 次付费 API。把输入做 Hash，结果存 Redis / 数据库 50ms 秒回，省 90% 成本还更快。'}
+        ])
+      ]},
+      {title:'部署前必查的 4 个 P0 安全底线',blocks:[
+        CALL('warn','把这条 Checklist 丢给 AI 审计','① <strong>严禁前端暴露私密 Key</strong>：NEXT_PUBLIC_ 前缀和前端组件里的代码全世界按 F12 可见；OPENAI_API_KEY / 支付 Secret / SUPABASE_SERVICE_ROLE_KEY 只能在服务端环境变量和后端路由。<br>② <strong>数据库强制严格 RLS（Row Level Security）</strong>：别让 AI 写 USING (true) 全放行，否则路人一个公开请求就拖走整张用户表。要求 AI："Every table must have strict Row Level Security enabled so users can only access their own rows."<br>③ <strong>支付验证 + 幂等性</strong>：绝不能信前端 /success?paid=true，必须服务端收 Stripe / Paddle / Lemon Squeezy / Creem 的 Webhook 并校验签名，再加幂等防重复。<br>④ <strong>安全报错屏蔽</strong>：生产环境只返回 Something went wrong, please try again，别把 SQL 错误栈和表名吐到前端。')
+      ]},
+      {title:'上线必装的"千里眼"',blocks:[
+        GRID([
+          {title:'Google Search Console',text:'免费且不可替代。看收录情况、抓取报错、真实搜索词排名 —— 后面运营课的核心武器。'},
+          {title:'轻量统计（Plausible / Umami / PostHog）',text:'盯两个维度：流量来源拆分（Google / chatgpt.com / perplexity.ai / Reddit）；关键事件漏斗（首页曝光 → 点核心工具 → 触付费墙 → 支付成功），哪步掉崖修哪步。'},
+          {title:'Microsoft Clarity',text:'微软免费。合规录下真实欧美访客的鼠标轨迹、热力图、愤怒点击（连点没反应的按钮）。看 15 分钟回放，你会发现无数开发时意识不到的 UX 致命伤。'}
+        ])
+      ]}
+    ],
+    tools:['Next.js','Astro','Cloudflare Turnstile','Upstash','Supabase','Stripe','Google Search Console','Microsoft Clarity','Plausible'],
+    takeaway:['公开 SEO 页绝不纯 CSR：AI 爬虫不执行 JavaScript','API 钱包四件套：Turnstile + 后端限流 + Token 上限 + 缓存','RLS 严格 + Webhook 幂等 + Key 不进前端，三条保命']
+  },
+  {
+    id:'m14',title:'变现转化 CRO 与 GEO 增长引擎',sub:'定价防亏 · 付费墙心理学 · AI 引擎引用 · 可链接资产',
+    kicker:'DEEP DIVE 08 · CRO & GEO',
+    lede:'两个最现实的问题：怎么把进站流量变成更多美金？怎么让 Google 和 ChatGPT 主动帮你源源不断拉人头？',
+    quote:'变现靠"按价值 / 积分防亏 + 沉没成本后卡付费墙"；增长靠"结构化事实喂饱 AI 引擎 + 免费微资产换真实外链"。',
+    sections:[
+      {title:'选对定价模型，别被无限量包月搞破产',blocks:[
+        P('接了大模型 / 生图 / 视频算力的站，千万别学传统 SaaS 搞 $9.9/月无限量。同一套餐下最重度的 10% 用户（90th percentile）的算力成本可能是普通用户几十倍 —— 收他 $9.9，他一个月跑掉你 $25 的 API 账单，卖越多亏越多。'),
+        TERMS([
+          {term:'一次性积分包（Pay-as-you-go Credits）',text:'冷流量转化之王。欧美用户对"什么都要绑卡按月扣费"极度反感（Subscription Fatigue）。中低频工具（修证件照、生成简历合同、批量转格式）卖 $9 买 50 Credits 永不过期，转化率常是包月 2–3 倍。'},
+          {term:'混合定价（Hybrid Pricing）',text:'Stripe 数据："基础订阅 + 用量额度"的 AI / 工具产品，中位收入增长率比纯订阅或纯按量高 21%。例：$12/月含 200 次，用完 $5 加购 100 次 —— 锁住 MRR 现金流，又封死算力亏损。'},
+          {term:'长尾免费 + 招牌付费 + 广告 / 联盟兜底',text:'用完即走的极轻度用户强设付费墙只会把人逼走。这类页保留免费，用克制的 AdSense 或相关软件联盟（Shopify / Hostinger）吃残余价值；付费墙精准留给高算力、批量导出、高清无水印。'}
+        ])
+      ]},
+      {title:'定价页与付费墙的 3 个高转化技巧',blocks:[
+        STEP([
+          {title:'三档锚定效应',text:'永远设计 3 档：$9 Starter / $19 Pro (Most Popular) / $49 Studio。中间档才是真想卖的主力，最贵那档存在的意义就是衬托它性价比极高。'},
+          {title:'卡在沉没成本最高的一秒',text:'正确顺序：上传文件 → 花时间调好参数 → 系统处理 3 秒 → 展示带水印预览图或前 2 条核心诊断结果 → 弹出解锁高清 / 完整报告的付费框。用户已投入心血、亲眼看到效果，掏卡率最高。'},
+          {title:'把账算成人话',text:'积分包 / 年付写一句直观的：Just $0.18 per image / Save 25% with yearly。帮大脑 1 秒算清这笔账有多划算。'}
+        ])
+      ]},
+      {title:'2026 版 GEO：让 AI 引擎主动推荐你',blocks:[
+        P('先戳破泡沫：Google 官方明确表态 —— 针对 Google 搜索与 AI Overviews，不存在 llms.txt 快捷通道，刷虚假品牌提及也没用，底层仍是硬内容质量和传统 SEO 权重。但 ChatGPT / Perplexity / Claude 有独立检索逻辑，用户买工具前已习惯直接问它们。'),
+        GRID([
+          {title:'① 首段直给可引用事实块',text:'大模型眼里废话开场毫无提取价值。每个 H2 下第一句就给完整、客观、带具体数字的结论，多用 HTML 对比表格。结构化段落被直接引用的概率最高。'},
+          {title:'② 全网实体口碑铺设',text:'AI 判断值不值得推荐，看你品牌名在第三方社区怎么被讨论。把招牌创意有节奏提交到 Product Hunt / AlternativeTo / There\'s An AI For That；去 Reddit 板块或 Indie Hackers 分享"我为解决 XX 痛点做了个免费工具 + 实测数据"，别发硬广。真实讨论帖是 ChatGPT / Perplexity 最爱引用的权威信源。'},
+          {title:'③ llms.txt + 精细 Schema',text:'根目录放纯文本 llms.txt（用 Markdown 列出网站干嘛、核心工具链接、定价），Google 不看但对其他 AI 爬虫友好；配合 SoftwareApplication 和 FAQPage 的 JSON-LD，让机器 100% 读懂你的产品。'}
+        ])
+      ]},
+      {title:'不花钱买垃圾外链：可链接资产打法',blocks:[
+        P('新站（DR 0）最大痛点是没有反向链接，确定性长尾页难进 Google 前三。绝对别去 Fiverr 买几百条廉价垃圾外链 —— 那只会招来惩罚。'),
+        STEP([
+          {title:'做一个免费微工具 / 小报告',text:'在母站上做完全免费、无广告、不用注册、能生成独特数据结论或行业基准测算的东西。例：2026 电商广告 ROAS 健康度免费测算器、各行业冷邮件平均回复率实时数据库。'},
+          {title:'发 3 句话真诚邮件',text:'去 Google 搜排名靠前的行业科普大文章找作者邮箱："Hi [Name], loved your guide on [主题]. I built a free interactive calculator (no sign-up, no ads) that lets readers test their own numbers: [链接]. Thought it might help your readers!"'},
+          {title:'5% 转化就是胜利',text:'只要 5% 博主顺手加个引用链接，你就拿到极珍贵的真实高权重（DR 60+）行业相关外链。母站权重一抬，下面所有确定性长尾页排名集体上蹿。'}
+        ])
+      ]}
+    ],
+    tools:['Stripe','Creem','Paddle','Lemon Squeezy','Product Hunt','AlternativeTo',"There's An AI For That",'Indie Hackers','Reddit','Bing Webmaster Tools'],
+    takeaway:['接 AI 算力别卖无限量包月：积分 / 混合定价防亏','付费墙卡在沉没成本最高的一秒，三档锚定','GEO = 可引用事实块 + 真实第三方讨论 + llms.txt；外链靠免费微资产换']
+  },
+  {
+    id:'m15',title:'手术刀式运营循环',sub:'近战打击词 · 僵尸页修剪 · 长期复利节律',
+    kicker:'DEEP DIVE 09 · OPERATIONS',
+    lede:'90% 的站做不起来不是代码烂，是"只管生不管养"。Google 对新站的信任考察要 3–6 个月，真正的指数增长曲线，是上线后每周花 1 小时用 GSC 做"手术刀式"调优出来的。',
+    quote:'把 10 个新页面铺在第 15 名，不如把 1 个第 9 名推进第 3 名 —— 流量翻 4 倍甚至 10 倍。',
+    sections:[
+      {title:'为什么 2026 年只盯前三名',blocks:[
+        P('残酷现实：AI 摘要和广告占据页面上方，Google 第 8–10 名点击率已趋近于零，自然搜索前 3 名吃掉近 70%（约 68.7%）总点击。把第 9 名推进第 3 名几乎不用从零积累外链，只要微调就能让流量翻几倍。')
+      ]},
+      {title:'每周 30 分钟：GSC 近战打击词提权术',blocks:[
+        STEP([
+          {title:'第 1 步 · 把潜力股筛出来',text:'效果 → 搜索结果，勾全四个指标（点击、展现、CTR、平均排名），时间选最近 28 天或 3 个月，按展现量降序。A 类潜力词：第 4–20 名且展现高（Striking Distance）；B 类漏水词：前 5 名但 CTR &lt; 2%（标题和描述没吸引力）。'},
+          {title:'第 2 步 · 对症下药四件套',text:'点开词看是哪个页面胜出（若两个页面抢同一个词 = 内部互搏，合并）。然后：① 高展现词自然进 title / h1 / 首段直答；② 补前 1–3 名有而你漏的参数、功能、FAQ，加一条母站内链；③ 改标题钩子（Cold Email Checker → Free Cold Email Spam Checker (Instant Score, No Sign-Up)）；④ 记录日期，28 天后对比。'},
+          {title:'第 3 步 · 顺手捡新点子',text:'看 GSC 查询列表常发现"我只做了 A，老外却搜 B 词进来"。这些意外词就是最真实、市场上最缺供给的新需求雷达，直接顺着裂变下一批确定性长尾页。'}
+        ])
+      ]},
+      {title:'每季度：僵尸页修剪（Content Pruning）',blocks:[
+        P('到第 3–6 个月，站里可能躺着几百个长尾页。新手舍不得删没人看的旧页 —— 但大量零点击、零展现、互相重叠的薄弱页会浪费抓取预算（Crawl Budget），拉低整站质量评分，连累明星页。修剪 1 个烂页，有时胜过新发 5 个普通页。'),
+        GRID([
+          {title:'Keep · 保留放行',text:'持续有自然流量、或转化率极高的明星页 —— 别乱动 URL 和核心结构。'},
+          {title:'Refresh · 保鲜升级',text:'以前流量好、最近掉排名（Content Decay）的页。更新 2026 最新数据、优化交互、改发布 / 修改日期。Perplexity 和 Google 都偏爱近期维护过的页，ROI 远高于写新页。'},
+          {title:'Consolidate · 合并归拢',text:'意图高度重合、互抢排名的两页，把内容和参数合并进表现更好的那个，弱页 URL 用 301 永久重定向过去。'},
+          {title:'Prune · 果断修剪',text:'上线 &gt;6 个月、几乎无外链、展现点击近零的僵尸页：删掉返回 410 / 404；必须留着但不想被索引的（站内搜索、标签页、感谢页）加 noindex 并从 sitemap 踢出。'}
+        ]),
+        CALL('warn','算法波动期别动刀','如果撞上 Google 全球核心算法更新（Core Update，如 2026 年 11 月刚开启的那次），通常要 2 周左右才尘埃落定。波动期千万别惊慌大改结构或乱删页面，等官方宣布结束再观察 1 周，用干净基线动手。')
+      ]},
+      {title:'一张拿来即用的运营节律表',blocks:[
+        STEP([
+          {title:'第 1 个月 · 冷启动验证期',text:'发 30–50 个黄金确定性长尾页 + 1 个招牌创意 → 去 Reddit / 目录站拿首批真实用户和初始外链 → 在 Microsoft Clarity 看 20 个真实用户的操作录屏，修掉所有 UX 卡点。'},
+          {title:'每周固定 1 小时 · 常规外科手术',text:'看 GSC 已编入索引曲线是否健康增长 → 挑 3–5 个近战打击词（第 4–20 名）或高展现低 CTR 词优化标题与内容 → 按模块三的节奏分批释放下一批 30–50 个长尾页。'},
+          {title:'每季度 1 次 · 整站大扫除',text:'做一次全站四象限体检，合并 / 修剪僵尸页，翻新核心高价值页 → 盘点过去 90 天哪类长尾词转美金最多，把招牌创意和免费可链接资产继续往最赚钱的垂直方向深挖。'}
+        ])
+      ]},
+      {title:'教练总结：全链路能力图谱已闭环',blocks:[
+        UL([
+          '<b>看需求</b>：SERP 解剖学 + 意图四象限，绕开 AI 零点击和巨头坑，只抓痛点交互需求（模块一）',
+          '<b>建产品</b>：欧美 5 秒首屏、去翻译腔、真实信任工程与 15 秒 Aha! Moment（模块二）',
+          '<b>铺流量</b>：条件渲染长尾页 + 母站枢纽架构 + 分批灰度，免疫规模化内容滥用打击（模块三）',
+          '<b>保工程</b>：SSR / SSG 保收录、INP 保流畅、Turnstile + 限流缓存防破产、RLS + Webhook 守安全（模块四）',
+          '<b>赚美金</b>：积分 / 混合定价防亏、沉没成本后置付费墙、多引擎 GEO + 免费可链接资产（模块五）',
+          '<b>吃复利</b>：每周 GSC 近战提权 + 每季度僵尸页修剪，把网站养成像房产一样持续生钱的数字资产（模块六）'
+        ])
+      ]}
+    ],
+    tools:['Google Search Console','Google Analytics','Microsoft Clarity','Plausible','Bing Webmaster Tools','Reddit','Product Hunt'],
+    takeaway:['前 3 名吃掉近 70% 点击，优先推第 4–20 名潜力词','每周 30 分钟 GSC 提权，28 天后看对比','每季度四象限体检：Keep / Refresh / Consolidate / Prune']
   }
 ];
 
@@ -497,7 +748,30 @@ const FLASHCARDS = [
   {front:'comparator',back:'对比器｜费率/规格/方案对比。天然带商业调查意图，适合联盟佣金。'},
   {front:'planner',back:'规划器｜配装、行程、排班、预算。用户愿意为"省两小时"付 $9。'},
   {front:'visualizer',back:'可视化工具｜数据、地图、时间线。视觉直观的站最适合短视频分发。'},
-  {front:'checklist',back:'自查清单｜新法规合规自查、新游戏全收集清单。结构化问答还容易被 AI 引用（GEO）。'}
+  {front:'checklist',back:'自查清单｜新法规合规自查、新游戏全收集清单。结构化问答还容易被 AI 引用（GEO）。'},
+  {front:'SERP',back:'搜索结果页｜拿到词先别写代码，开美国 IP 无痕亲眼看第一页，才是唯一真理。'},
+  {front:'AI Overviews',back:'谷歌顶部 AI 摘要｜出现后自然结果 CTR 从 15% 跌到 8%，文字能答完的需求直接放弃。'},
+  {front:'Zero-Click',back:'零点击｜约 68% 的 Google 搜索没点击就结束。有免疫力的词必须交互 / 文件处理 / 实时数据。'},
+  {front:'KD',back:'关键词难度｜只统计前 10 页面外链域名数，不知道页面塞没塞广告、前排有没有 Reddit。只能初筛。'},
+  {front:'软柿子信号',back:'Reddit 帖 / DR<20 老破小站 / 标题答非所问｜首页出现任意 2 个，说明有缝隙可钻。'},
+  {front:'意图四象限',back:'信息型别碰、商业调研慎用、工具交互主攻、交易行动必抢。'},
+  {front:'条件渲染',back:'同一工具按场景切换真实参数：Shopify 2048×2048，US Visa 600×600 & <240KB。遮住标题能看出不同，才安全。'},
+  {front:'Intent Cluster',back:'同类意图合并｜两词前 5 名有 3 个以上相同，就做成一个超强页，别自己打自己。'},
+  {front:'Hub-and-Spoke',back:'枢纽-辐射｜母站 Hub 承接权重，场景页 Spoke 全挂在下面，首页点击 ≤3 次可达，配面包屑 + Related Scenarios。'},
+  {front:'Index Bloat',back:'索引膨胀｜新站首日万页会被贴"低质批量站"标签。500 个能排前十的页胜过 5000 个僵尸页。'},
+  {front:'CSR / SSR',back:'客户端渲染源码是空壳，AI 爬虫根本不执行 JS。SEO 页必须 Next.js SSR / SSG 或 Astro。'},
+  {front:'INP',back:'交互响应延迟 < 200ms｜工具站的命门，测的是每次点击 / 输入多久出画面反馈。'},
+  {front:'RLS',back:'行级安全｜Supabase 每张表都要开严格 RLS，USING (true) 全放行 = 路人可拖走整张用户表。'},
+  {front:'Webhook 幂等',back:'别信前端 /success?paid=true。服务端验支付平台 Webhook 签名 + 防重复，否则黑客无限白嫖。'},
+  {front:'Turnstile',back:'Cloudflare 免费无感人机盾｜套在消耗算力的按钮前，挡约 95% 自动化脚本。'},
+  {front:'混合定价',back:'低月费 + 用量额度｜锁住 MRR 又封死算力亏损，收入增长比纯订阅 / 纯按量高约 21%。'},
+  {front:'沉没成本付费墙',back:'上传 → 调参 → 处理 → 看到带水印结果 → 再弹解锁。先给价值再要钱，掏卡率最高。'},
+  {front:'GEO',back:'生成式引擎优化｜首段给可引用事实块 + 第三方真实讨论 + llms.txt，让 ChatGPT / Perplexity 主动引用你。'},
+  {front:'可链接资产',back:'免费无注册的微工具 / 基准报告，发给行业文章作者换真实 DR 60+ 外链，别买垃圾链。'},
+  {front:'Striking Distance',back:'近战打击词｜GSC 里第 4–20 名、展现高的词。微调标题和内容就能推进前三，杠杆最高。'},
+  {front:'Content Pruning',back:'僵尸页修剪｜每 90 天四象限体检：Keep / Refresh / Consolidate / Prune，算法更新期别动刀。'},
+  {front:'Aha! Moment',back:'15 秒顿悟｜工具摆首屏、Try an example 一键体验，看到成果后再弹登录墙。'},
+  {front:'AI Slop Aesthetic',back:'AI 流水线审美｜深色 + 紫蓝渐变发光 + 满屏默认图标。欧美用户警惕，要留白 + 单主色 + 真实截图。'}
 ];
 
 const QUIZ = [
@@ -510,7 +784,17 @@ const QUIZ = [
   {scene:'你想在 Reddit 行业板块推广刚上线的免费工具。',q:'哪种做法最不容易被删帖封号？',opts:['发帖 "Hi guys, I built a cool tool, check it out!"','找到正在求助的帖子，先写 100 字真诚干货，最后顺带提一句免费工具','每天在同一板块发三次链接','私信所有版主求置顶'],ans:1,why:'先给价值再提工具是老手"温水煮青蛙"打法；硬广 99% 秒删甚至封号，而且高赞干货帖会在几个月后持续带来长尾流量。'},
   {scene:'一个刚发布的 AI 视频模型突然火了，谷歌趋势显示 Breakout，但 Ahrefs 还没收录这个词。',q:'正确的判断和动作？',opts:['Ahrefs 没数据说明没需求，放弃','搜这个词看首页：若只有新闻/论文/讨论、没有能直接用的工具页，就 24 小时内上线一个极简在线试玩页','先花两周做详细市场调研再决定','等 Semrush 更新词库后再说'],ans:1,why:'第三方词库有 30–90 天延迟。新词红利就看时间窗；首页没有可用工具页 = 真空期，应快速用纯前端/现成接口上线。'},
   {scene:'你准备做一个游戏站，域名想叫 MinecraftHelper.com，因为现在 Minecraft 很火。',q:'问题在哪？',opts:['没有问题，精准匹配域名最好','绑定单一游戏：新游戏来了装不进去，还可能因商标被仲裁；应取容器型品牌名','.com 太贵了，应该用 .gg','游戏站不能用 AdSense'],ans:1,why:'EMD 精准匹配域名的自动加权已被谷歌限制。容器型品牌（Pixel / Forge / Quest 等）才能长期装进不同游戏专题。'},
-  {scene:'你的图片处理工具上线前，AI 生成的代码里有一个调用 AI 接口的 Key 直接写在前端 JS 里。',q:'必须做什么？',opts:['Key 藏在 JS 里别人看不到，没关系','把 Key 移到后端，并在对话框里要求 AI 检查全代码无密钥暴露；图片处理尽量放浏览器本地','把 Key 换个复杂一点的名字','等有人刷爆账单再说'],ans:1,why:'前端密钥会被任何人扒走刷爆账单。保命指令 ①：绝不让 API Key 暴露在前端；② 文件处理尽量 Client-side，省服务器又规避隐私合规。'}
+  {scene:'你的图片处理工具上线前，AI 生成的代码里有一个调用 AI 接口的 Key 直接写在前端 JS 里。',q:'必须做什么？',opts:['Key 藏在 JS 里别人看不到，没关系','把 Key 移到后端，并在对话框里要求 AI 检查全代码无密钥暴露；图片处理尽量放浏览器本地','把 Key 换个复杂一点的名字','等有人刷爆账单再说'],ans:1,why:'前端密钥会被任何人扒走刷爆账单。保命指令 ①：绝不让 API Key 暴露在前端；② 文件处理尽量 Client-side，省服务器又规避隐私合规。'},
+  {scene:'你搜一个词，首屏是 4 条广告 + 半屏 AI Overview + Google 自带的小工具，自然前 5 名全是 HubSpot 这类 DR 90+ 巨头。',q:'按 SERP 解剖学，应该？',opts:['需求这么大，立刻做，抢自然第一','致命红灯，直接放弃；换个能接上具体动作的长尾词','先买 Ahrefs 看 KD，低于 20 就做','写一篇更详细的评测长文跟巨头竞争'],ans:1,why:'首屏被广告+AI摘要+官方工具占满，就算排自然第一也在第 2、3 屏；DR 90+ 巨头环伺，个人新站是炮灰。'},
+  {scene:'你在做图片裁剪工具，打算批量生成 100 个页面：只把 H1 换成 Resize Image for {Platform}，正文让 AI 各写 300 字平台介绍。',q:'2026 年这套做法的结局是？',opts:['没问题，Zapier 就是这么做的','会被判 Doorway Page / Scaled Content Abuse，可能整站降权','只要每页标题不同就安全','加上 canonical 就没事'],ans:1,why:'换汤不换药的相似页就是被打击的对象。Zapier 活下来是因为每页有真实不同的集成数据和功能，不是文字替换。'},
+  {scene:'你用 Bolt 生成了一个工具站，右键查看源代码只有 <div id="root"></div>，内容全靠 JS 拼出来。',q:'最大的风险是？',opts:['页面加载慢一点点','Google 收录慢且 ChatGPT / Perplexity 等 AI 爬虫看不到你，GEO 流量归零','JS 太多不安全','没有 favicon'],ans:1,why:'CSR 对 Google 是二次渲染、收录慢；对不执行 JS 的 AI 爬虫则是完全隐形。SEO 页第一天就该用 SSR / SSG / Astro。'},
+  {scene:'你的工具接了付费 AI 接口。你打算卖 $9.9/月无限量使用，但没做限流和缓存。',q:'最可能的结果？',opts:['稳赚，用户很喜欢','最重 10% 用户会跑掉远超 $9.9 的 API 账单，卖越多亏越多','Google 会 penalize 定价','用户嫌贵不会买'],ans:1,why:'重度用户算力成本可能是普通用户几十倍。要卖积分包或混合定价，并用 Turnstile + 后端限流 + Token 上限 + 缓存兜底。'},
+  {scene:'你刚上线工具站，AI 生成的代码把 Supabase 表设成了 USING (true)，支付成功靠前端跳 /success?paid=true 判断。',q:'这两处合起来意味着什么？',opts:['开发效率高，先上线再说','任何人能拖走整张用户表，且自己输网址就能无限白嫖付费功能','没问题，Supabase 默认就安全','只要不公开网址就没事'],ans:1,why:'RLS 全放行 = 数据库裸奔；前端成功页不可信 = 支付可伪造。必须开严格 RLS，服务端验 Webhook 签名并做幂等。'},
+  {scene:'一个欧美用户打开你的工具站，首屏写着 Elevate your workflow with AI，按钮是 Submit，还没怎么用就弹登录注册框。',q:'按信任工程，最该改什么？',opts: ['换个更漂亮的渐变背景','H1 改成具体人群+结果+机制，按钮写 Check My Email Free，把登录墙后置到看到结果之后','加 4 个 AI 生成的假好评','多放几个 3D 插画'],ans:1,why:'空洞 AI 口号 + 无意义按钮 + 前置登录墙是冷流量三大杀手。要具体性测试、结果导向 CTA、Try-before-signup、去 AI Slop 审美。'},
+  {scene:'GSC 里一个词排第 9 名、展现很高但点击少；同时你还有 10 个新页躺在第 15 名。',q:'这周 30 分钟应该优先做什么？',opts:['给 10 个新页各写 5 篇外链文章','优化第 9 名那页的 title/H1/首段并补齐竞品有的参数，28 天后看对比','再批量发 100 个新页','删掉第 9 名的页重做'],ans:1,why:'前 3 名吃掉近 70% 点击，第 8–10 名趋近于零。把第 9 名推进前三几乎不用从零攒外链，杠杆远高于铺新页。'},
+  {scene:'运营第 5 个月，站里有 200 个长尾页。其中 60 个半年零点击零展现，还有两页目标意图完全重合、互抢排名。',q:'季度修剪该怎么处理？',opts:['全部保留，页面越多权重越高','零点击僵尸页删掉返 410/404；意图重合的两页合并，弱页 301 到强页；正在掉排名的页做 Refresh','给这 60 页各买一条外链','把整站 noindex 一周再恢复'],ans:1,why:'四象限体检：Keep / Refresh / Consolidate / Prune。零价值页浪费抓取预算、拉低整站质量；重合页要合并集中权重。注意算法更新期别动刀。'},
+  {scene:'你想让 ChatGPT / Perplexity 在用户问"好用的冷邮件垃圾词检测器"时推荐你的站。',q:'哪个动作最有效？',opts:['在官网写 100 篇"我们最好"的文章','在 H2 下第一句给带数字的可引用事实块，并把工具提交到 Product Hunt / AlternativeTo，去 Reddit 真实分享实测数据','刷 1000 个虚假品牌提及','给 Google 专门做 llms.txt 走快捷通道'],ans:1,why:'AI 引擎看的是结构化可引用内容 + 第三方真实讨论。Google 官方说 llms.txt 对它不是快捷通道，刷虚假提及也没用。'},
+  {scene:'你发现一个长尾词能裂变出 for Shopify / for US Visa / for Kindle 等 50 个页面，但数据库里共有 5000 种组合，新域名 DR 0。',q:'正确放量节奏是？',opts:['第一天全生成 5000 页提交给 Google，抢先占坑','先上 30–50 个需求最确定的页，观察 2–4 周；收录率 >80% 后每周加 50–100 页；缺独有数据的组合加 noindex','只做 5 个页，其余永远不做','按 Excel 排列组合全部生成，但每个页面标题不同'],ans:1,why:'新站首日万页 = Index Bloat，会被贴低质批量站标签甚至拖累核心首页。要三阶段灰度 + Quality Gates 质量门控。'}
 ];
 
 const ORDER_STEPS = [
@@ -532,7 +816,14 @@ const CHECKS = [
   {t:'④ AI 免疫度够不够？',d:'ChatGPT 一句话能答完 → 不做。必须有交互 / 文件处理 / 个性化计算 / 实时数据。'},
   {t:'⑤ 24 小时内能不能上线？',d:'需要复杂后端或人工审核 → 放弃。纯前端 + 现成接口能用 AI 一晚跑通 → 动手。'},
   {t:'⑥ 流量含金量如何？',d:'面向 Tier-1 国家？商用 / 金融 / SaaS 场景？CPC 高不高？同样 1 万人访问收益差 50 倍。'},
-  {t:'⑦ 变现路径想清楚了吗？',d:'免费工具 + AdSense？还是 $9 Pro 用 Creem 收款？还是导航站拿联盟佣金？至少确定一条。'}
+  {t:'⑦ 变现路径想清楚了吗？',d:'免费工具 + AdSense？还是 $9 Pro 用 Creem 收款？还是导航站拿联盟佣金？至少确定一条。'},
+  {t:'⑧ 首屏含金量够吗？',d:'4 条广告 + 半屏 AI Overview + Google 自带工具 = 直接放弃。广告 ≤1–2 条、无官方工具才继续。'},
+  {t:'⑨ 前 5 名是什么形态？',d:'全是单页小工具 = 用户要立刻动手，别写评测长文；全是长文 / Reddit = 可能市场缺好工具。'},
+  {t:'⑩ 有 ≥2 个软柿子信号吗？',d:'Reddit / Quora / StackExchange 帖、DR<20 老破小站、标题答非所问 —— 任意 2 个才有缝隙可钻。'},
+  {t:'⑪ 是止痛药还是维生素？',d:'卡在工作流里、能省钱省时间、高频复用 = 止痛药；一时好玩、用一次就走 = 维生素。'},
+  {t:'⑫ 能裂变成差异化长尾页吗？',d:'按平台 / 对象裂变时，每个页面的参数预设必须真不一样，否则就是会被惩罚的门页。'},
+  {t:'⑬ 上线前工程四件套齐了吗？',d:'SSR/SSG 保收录、Turnstile + 后端限流 + Token 上限 + 缓存防破产、严格 RLS + Webhook 幂等、GSC + 统计 + Clarity 埋点。'},
+  {t:'⑭ 定价会亏本吗？',d:'接 AI 算力就别卖无限量包月。用积分包或混合定价，付费墙卡在用户看到成果之后。'}
 ];
 
 const MAP_STAGES = [
@@ -556,8 +847,8 @@ const MAP_STAGES = [
    text:'Cloudflare Pages/Workers 托管，绑定 .com 域名开 HTTPS。装上 GA + GSC，接 AdSense 或 Creem。网站底部必须有 Privacy Policy / Terms / Contact 法律三件套。',
    tools:['Cloudflare','Cloudflare Registrar','Porkbun','Google Analytics','Google Search Console','Google AdSense','Creem','Dodo Payments','Vercel'],
    checks:['独立域名 + HTTPS + 手机正常','隐私政策 / 条款 / 联系页齐全','GA 与 GSC 已装','收款通道已接通','robots.txt 未误禁抓取']},
-  {icon:'📈',n:'STAGE 06',title:'增长 · 脉冲破冰 + 复利爬坡',sub:'目标：第一批真实用户与长尾排名',
-   text:'前 14 天提交 GSC 和 Bing、批量刷目录站；前 30 天 Reddit 干货回复 + #BuildInPublic + 短视频；2–12 个月做真功能工具矩阵页和 FAQ，每周优化排名 5–20 名的页面。',
-   tools:['Google Search Console','Bing Webmaster Tools','Reddit','X / Twitter','TikTok','YouTube Shorts','Product Hunt','AlternativeTo','BetaList','Indie Hackers'],
-   checks:['sitemap 已提交给谷歌和必应','至少提交 10 个目录站','Reddit 只发干货不硬广','每周 30 分钟调优 GSC','首页有 FAQ 和对比（GEO）','开始沉淀邮箱列表']}
+  {icon:'📈',n:'STAGE 06',title:'增长与运营 · 脉冲破冰 + 手术刀复利',sub:'目标：第一批真实用户 + 长期复利曲线',
+   text:'前 14 天提交 GSC 和 Bing、批量刷目录站；前 30 天 Reddit 干货回复 + #BuildInPublic + 短视频；2–12 个月用条件渲染的差异化长尾页分批灰度放量，每周 30 分钟用 GSC 推进第 4–20 名潜力词，每季度做一次僵尸页四象限修剪。',
+   tools:['Google Search Console','Bing Webmaster Tools','Reddit','X / Twitter','TikTok','YouTube Shorts','Product Hunt','AlternativeTo','BetaList','Indie Hackers','Microsoft Clarity','Plausible'],
+   checks:['sitemap 已提交给谷歌和必应','至少提交 10 个目录站','Reddit 只发干货不硬广','长尾页分批灰度，首月 ≤50 页','每周 30 分钟推进第 4–20 名潜力词','首页有可引用事实块和对比表（GEO）','每季度四象限体检，修剪僵尸页','看 Clarity 录屏修掉 UX 卡点']}
 ];
