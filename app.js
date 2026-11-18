@@ -25,6 +25,14 @@ saved.orderBest = saved.orderBest || false;
 saved.notes     = saved.notes     || '';
 saved.theme     = saved.theme     || 'light';
 
+/* 旧版 m1–m21 进度迁移到新的 L00–L14 */
+const LEGACY_MAP={m20:0,m1:1,m7:1,m2:2,m10:2,m3:3,m8:3,m16:4,m11:5,m5:6,m13:6,m17:6,
+  m6:7,m12:8,m19:8,m14:9,m4:10,m18:10,m15:12,m9:13,m21:14};
+if(saved.done.some(x=>LEGACY_MAP[x]!==undefined)){
+  saved.done=Array.from(new Set(saved.done.map(x=>LEGACY_MAP[x]!==undefined?MODULES[LEGACY_MAP[x]].id:x)));
+  persist();
+}
+
 let state={
   view:'course', mod:0, toolCat:'全部', toolQ:'', train:'flash',
   flashIdx:0, flashFlip:false, quizIdx:0, quizPicked:null, quizScore:0, quizDone:false,
@@ -61,6 +69,13 @@ function renderBlocks(blocks){
           <button class="code-copy" data-copy="${encodeURIComponent(b.text)}">复制</button></div>
           <pre class="code-body">${esc(b.text)}</pre></div>`;
       }
+      case 'table':{
+        return `<div class="vtable-wrap"><table class="vtable">
+          <thead><tr>${b.head.map(h=>`<th>${h}</th>`).join('')}</tr></thead>
+          <tbody>${b.rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</tbody>
+        </table></div>`;
+      }
+      case 'quote': return `<blockquote class="vquote">${esc(b.text)}</blockquote>`;
       default: return '';
     }
   }).join('');
@@ -68,20 +83,29 @@ function renderBlocks(blocks){
 
 /* ---------- course view ---------- */
 function renderModuleList(){
-  $('#moduleList').innerHTML=MODULES.map((m,i)=>`
-    <button class="mod-item ${i===state.mod?'active':''} ${saved.done.includes(m.id)?'done':''}" data-mod="${i}">
-      <span class="mod-num">${saved.done.includes(m.id)?'✓':String(i+1).padStart(2,'0')}</span>
+  let lastGroup=null;
+  $('#moduleList').innerHTML=MODULES.map((m,i)=>{
+    let head='';
+    if(m.group&&m.group!==lastGroup){
+      lastGroup=m.group;
+      head=`<div class="side-group"><span>${esc(m.group)}</span></div>`;
+    }
+    return head+`<button class="mod-item ${i===state.mod?'active':''} ${saved.done.includes(m.id)?'done':''}" data-mod="${i}">
+      <span class="mod-num">${saved.done.includes(m.id)?'✓':String(i).padStart(2,'0')}</span>
       <span class="mod-body"><strong>${m.title}</strong><small>${m.sub}</small></span>
-    </button>`).join('');
+    </button>`;
+  }).join('');
 }
 
 function renderLesson(){
   const m=MODULES[state.mod];
   const prev=state.mod>0?state.mod-1:null, next=state.mod<MODULES.length-1?state.mod+1:null;
   const isDone=saved.done.includes(m.id);
+  const pad=i=>String(i).padStart(2,'0');
+  const label=i=>i===null?'':pad(i)+' '+MODULES[i].title;
   $('#lesson').innerHTML=`
     <div class="lesson-head">
-      <div class="lesson-meta">${m.sections.length} 个部分 · ${m.tools.length} 个工具</div>
+      <div class="lesson-meta">${esc(m.group)} · ${m.sections.length} 个部分 · ${m.tools.length} 个工具</div>
       <h1>${m.title}</h1>
       <p class="lede">${m.lede}</p>
       <div class="lesson-banner"><div class="quote">${m.quote}</div></div>
@@ -89,12 +113,12 @@ function renderLesson(){
     ${m.sections.map(s=>`<div class="section-title"><span class="bar"></span><h2>${s.title}</h2></div>${renderBlocks(s.blocks)}`).join('')}
     <div class="section-title"><span class="bar"></span><h2>本课工具 · 一键直达</h2></div>
     <div style="line-height:2.4">${toolLinksHTML(m.tools)}</div>
-    <div class="section-title"><span class="bar"></span><h2>带走的 3 句话</h2></div>
+    <div class="section-title"><span class="bar"></span><h2>带走的 ${m.takeaway.length} 句话</h2></div>
     <div class="card">${m.takeaway.map((t,i)=>`<p style="margin-bottom:8px"><strong style="color:var(--cyan)">${i+1}.</strong> ${t}</p>`).join('')}</div>
     <div class="lesson-nav">
-      <button class="btn ghost" data-go="${prev}" ${prev===null?'disabled style="opacity:.35"':''}>← 上一节</button>
+      <button class="btn ghost nav-page" data-go="${prev}" title="${esc(label(prev))}" ${prev===null?'disabled style="opacity:.35"':''}><span class="nav-arrow">←</span><span class="nav-label">${prev===null?'已是第一课':esc(label(prev))}</span></button>
       <button class="btn done-btn ${isDone?'is-done':''}" id="doneBtn">${isDone?'✓ 已标记掌握':'标记本节已掌握'}</button>
-      <button class="btn primary" data-go="${next}" ${next===null?'disabled style="opacity:.35"':''}>下一节 →</button>
+      <button class="btn primary nav-page" data-go="${next}" title="${esc(label(next))}" ${next===null?'disabled style="opacity:.35"':''}><span class="nav-label">${next===null?'已是最后一课':esc(label(next))}</span><span class="nav-arrow">→</span></button>
     </div>`;
   $('#rail').innerHTML=`
     <h4>本节工具箱</h4>
@@ -157,7 +181,7 @@ function renderFlash(){
           <button class="btn" id="fcNext">下一个 →</button>
           <button class="btn ${known?'done-btn is-done':''}" id="fcKnow">${known?'✓ 已掌握':'标记已掌握'}</button>
           <button class="btn ghost" id="fcShuffle">打乱顺序</button>
-          <span class="fc-counter">目标是 12 个词根都能脱口而出对应场景</span>
+          <span class="fc-counter">目标是 ${FLASHCARDS.length} 个词根都能脱口而出对应场景</span>
         </div>
       </div>
       <div>
@@ -234,7 +258,7 @@ function renderChecks(){
       ${CHECKS.map((c,i)=>`<label class="check-item ${saved.checks[i]?'checked':''}"><input type="checkbox" data-check="${i}" ${saved.checks[i]?'checked':''}><div><div class="ct2">${c.t}</div><div class="cd">${c.d}</div></div><span class="time-badge">2 min</span></label>`).join('')}
       <button class="btn ghost" id="checkReset" style="margin-top:10px">清空重来（下一个新词）</button>
     </div>
-    <div class="callout gold"><span class="ic">⭐</span><div><span class="ct">用熟之后</span><p>这 7 条应该在看到新词的 15 分钟内自动在脑子里跑完。跑不完的，就说明这个词还不值得你花 10 美元买域名。</p></div></div>`;
+    <div class="callout gold"><span class="ic">⭐</span><div><span class="ct">用熟之后</span><p>这 ${CHECKS.length} 条应该在看到新词的 15 分钟内自动在脑子里跑完。跑不完的，就说明这个词还不值得你花 10 美元买域名。</p></div></div>`;
 }
 
 /* ---------- map ---------- */
@@ -285,11 +309,21 @@ function genWorkshop(){
 }
 
 /* ---------- navigation ---------- */
+function syncURL(){
+  try{
+    const u=new URL(location.href);
+    u.searchParams.set('view',state.view);
+    if(state.view==='course') u.searchParams.set('mod',state.mod);
+    else u.searchParams.delete('mod');
+    history.replaceState(null,'',u.pathname+u.search+u.hash);
+  }catch(e){}
+}
 function setView(v){
   state.view=v;
   $$('.view').forEach(el=>el.classList.toggle('active',el.id==='view-'+v));
   $$('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.view===v));
   window.scrollTo({top:0,behavior:'instant'});
+  syncURL();
 }
 
 /* ---------- events ---------- */
@@ -297,12 +331,12 @@ document.addEventListener('click',e=>{
   const t=e.target;
   const nav=t.closest('.nav-btn');
   if(nav){ setView(nav.dataset.view); return; }
-  if(t.closest('#homeBtn')){ state.mod=0;renderModuleList();renderLesson();setView('course');return; }
+  if(t.closest('#homeBtn')){ state.mod=0;renderModuleList();renderLesson();setView('course');syncURL();return; }
 
   const mod=t.closest('[data-mod]');
-  if(mod){ state.mod=+mod.dataset.mod;renderModuleList();renderLesson();window.scrollTo({top:0,behavior:'instant'});return; }
+  if(mod){ state.mod=+mod.dataset.mod;renderModuleList();renderLesson();window.scrollTo({top:0,behavior:'instant'});syncURL();return; }
   const go=t.closest('[data-go]');
-  if(go&&go.dataset.go!=='null'){ state.mod=+go.dataset.go;renderModuleList();renderLesson();window.scrollTo({top:0,behavior:'instant'});return; }
+  if(go&&go.dataset.go!=='null'){ state.mod=+go.dataset.go;renderModuleList();renderLesson();window.scrollTo({top:0,behavior:'instant'});syncURL();return; }
   if(t.closest('#doneBtn')){
     const id=MODULES[state.mod].id;
     if(saved.done.includes(id)) saved.done=saved.done.filter(x=>x!==id); else saved.done.push(id);
@@ -453,5 +487,6 @@ if(pt&&['flash','quiz','order','check'].includes(pt)){
 }
 const pm=params.get('mod');
 if(pm&&+pm>=0&&+pm<MODULES.length){ state.mod=+pm;renderModuleList();renderLesson(); }
+syncURL();
 
 })();

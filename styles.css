@@ -93,6 +93,11 @@ h1,h2,h3,h4{font-family:var(--display);font-weight:600;letter-spacing:-.028em;li
 }
 .side-head{padding:0 10px 16px;border-bottom:var(--hair) solid var(--rule);margin-bottom:10px}
 .side-head h2{margin:0;font-size:17px}
+.side-group{
+  padding:16px 10px 6px;margin-top:6px;border-bottom:var(--hair) solid var(--rule);
+  font-family:var(--display);font-size:11px;font-weight:600;color:var(--accent);letter-spacing:.02em;
+}
+.side-group:first-child{margin-top:0;padding-top:6px}
 .module-list{display:flex;flex-direction:column}
 .mod-item{
   display:flex;gap:11px;align-items:flex-start;width:100%;text-align:left;padding:9px 10px;
@@ -152,6 +157,20 @@ h1,h2,h3,h4{font-family:var(--display);font-weight:600;letter-spacing:-.028em;li
   font-family:var(--mono);font-size:.86em;padding:1px 5px;border:var(--hair) solid var(--rule);
   background:var(--paper-2);color:var(--accent);border-radius:3px;
 }
+.vtable-wrap{overflow-x:auto;margin:16px 0;border:var(--hair) solid var(--rule-2);border-radius:var(--cut)}
+.vtable{width:100%;border-collapse:collapse;font-size:12.5px;min-width:620px}
+.vtable th,.vtable td{padding:11px 13px;text-align:left;vertical-align:top;border-bottom:var(--hair) solid var(--rule);line-height:1.75}
+.vtable th{background:var(--graphite);color:var(--graphite-ink);font-family:var(--display);font-weight:600;font-size:12px;white-space:normal}
+.vtable td{color:var(--ink-2)}
+.vtable tr:last-child td{border-bottom:0}
+.vtable tr:hover td{background:var(--paper-2)}
+.vquote{
+  margin:16px 0;padding:14px 18px;border-left:3px solid var(--accent);background:var(--accent-wash);
+  font-family:var(--mono);font-size:12px;line-height:1.85;color:var(--ink);white-space:pre-wrap;word-break:break-word;
+}
+.lesson-nav .nav-page{display:flex;align-items:center;gap:8px;max-width:280px;min-width:0}
+.nav-label{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nav-arrow{flex:0 0 auto;font-family:var(--mono)}
 .card{padding:14px 18px;border:var(--hair) solid var(--rule);background:var(--paper);border-radius:var(--cut);margin:16px 0}
 .card h3{font-size:14px;margin:0 0 8px}
 .card p{margin:0 0 7px;color:var(--ink-2);font-size:13px}
@@ -408,6 +427,8 @@ label{display:block;font-size:10.5px;color:var(--muted);margin:14px 0 6px}
   .sidebar{position:static;height:auto;border-right:0;border-bottom:var(--hair) solid var(--rule);padding:14px}
   .module-list{flex-direction:row;overflow-x:auto;padding-bottom:4px}
   .mod-item{min-width:168px}
+  .side-group{flex:0 0 auto;align-self:center;margin:0 4px 0 0;padding:6px 8px;border:var(--hair) solid var(--rule);border-radius:3px;white-space:nowrap}
+  .lesson-nav .nav-page{max-width:46%}
   .side-foot{display:none}
   .lesson{padding:26px 18px 60px}
   .lesson-head h1{font-size:26px}
